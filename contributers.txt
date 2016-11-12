@@ -1,0 +1,10 @@
+###############################################################################
+This repository is created for tracking progress on group project related to
+CMPE273-Fall16.
+
+The main contributers are:
+Avdeep Singh
+Chetan Sidhu
+Sanisha Rehan
+Shruti Dev
+###############################################################################
