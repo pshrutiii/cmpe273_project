@@ -33,30 +33,48 @@
     </br>
 
     <div class="row" style="height:100%; width=100%">
-      <div class="col s12 m4 l3">
-        <div class="row">
+      <div class="col s12 m3 l3">
           <div class="input-field col s12">
             <input id="origin-input" type="text" placeholder="Enter an origin location">
             <label for="autocomplete-input">Source</label>
           </div>
-        </div>
-        <div class="row">
           <div class="input-field col s12">
             <input id="destination-input" type="text" placeholder="Enter a destination location">
             <label for="autocomplete-input">Destination</label>
           </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input id="waypoint1-input" type="text" placeholder="WayPoint 1">
-            <label for="autocomplete-input">WayPoint1</label>
+          <div class="input-field col s12" id="waypoint-holder-1" style="display:none">
+            <input id="waypoint-input-1" type="text" placeholder="Enter first waypoint">
+            <label for="autocomplete-input">Waypoint 1</label>
           </div>
-        </div>
+          <div class="input-field col s12" id="waypoint-holder-2" style="display:none">
+            <input id="waypoint-input-2" type="text" placeholder="Enter second waypoint">
+            <label for="autocomplete-input">Waypoint 2</label>
+          </div>
+          <div class="input-field col s12" id="waypoint-holder-3" style="display:none">
+            <input id="waypoint-input-3" type="text" placeholder="Enter third waypoint">
+            <label for="autocomplete-input">Waypoint 3</label>
+          </div>
+          <div class="input-field col s12" id="addwaypoint_holder">
+            <a class="btn-floating btn waves-effect waves-light red tooltipped" 
+               data-position="right" data-tooltip="Add Another Stop" onclick="addWayPoint();">
+              <i class="material-icons">add</i>
+            </a>
+          </div>
+          <div class="input-field col s12">
+            <a class="waves-effect waves-light btn" id="compare_prices_button" type="submit">Compare Prices</a>
+          </div>
       </div>
 
-      <div class="col s12 m8 l9" style="height:100%; width:75%;">
+      <div class="col s12 m6 l6" style="height:100%; width:75%;">
         <div id="map"></div>
       </div>      
+
+      <div class="col s12 m3 l3" style="display:none">
+        <div class="row" id="results">
+          </div>
+        </div>
+      </div>  
+      
     </div>
     
     <!--Import jQuery before materialize.js-->
@@ -64,10 +82,36 @@
     <script type="text/javascript" src="static/materialize/js/materialize.min.js"></script>
 
     <script>
+      function addWayPoint() {
+        myWayPointState.incr();
+        var index = myWayPointState.get();
+        document.getElementById("waypoint-holder-" + index).style="display:block";
+        if (index == 3) {
+          $("#addwaypoint_holder").toggle();
+        } 
+      }
+ 
+      var myWayPointState = function() {
+        // set up closure scope
+        var state = 0;
+
+        // return object with methods to manipulate closure scope
+        return {
+          incr: function() {
+            state ++;
+          }, 
+          decr: function() {
+            state--;
+          },
+          get: function() {
+            return state;
+          }
+        };
+      }();
+      
       function initMap() {
         var origin_place_id = null;
         var destination_place_id = null;
-        var waypoint1_place_id = null;
         var travel_mode = 'DRIVING';
         var map = new google.maps.Map(document.getElementById('map'), {
           mapTypeControl: false,
@@ -80,7 +124,9 @@
 
         var origin_input = document.getElementById('origin-input');
         var destination_input = document.getElementById('destination-input');
-        var waypoint1_input = document.getElementById('waypoint1-input');
+        var waypoint1_input = document.getElementById('waypoint-input-1');
+        var waypoint2_input = document.getElementById('waypoint-input-2');
+        var waypoint3_input = document.getElementById('waypoint-input-3');
 
         var origin_autocomplete = new google.maps.places.Autocomplete(origin_input);
         origin_autocomplete.bindTo('bounds', map);
@@ -90,7 +136,12 @@
         var waypoint1_autocomplete =
             new google.maps.places.Autocomplete(waypoint1_input);
         waypoint1_autocomplete.bindTo('bounds', map);
-
+        var waypoint2_autocomplete =
+            new google.maps.places.Autocomplete(waypoint2_input);
+        waypoint2_autocomplete.bindTo('bounds', map);
+        var waypoint3_autocomplete =
+            new google.maps.places.Autocomplete(waypoint3_input);
+        waypoint3_autocomplete.bindTo('bounds', map);
 
         function expandViewportToFitPlace(map, place) {
           if (place.geometry.viewport) {
@@ -112,8 +163,8 @@
           // If the place has a geometry, store its place ID and route if we have
           // the other place ID
           origin_place_id = place.place_id;
-          route(origin_place_id, destination_place_id, waypoint1_place_id, travel_mode,
-                directionsService, directionsDisplay);
+          // route(origin_place_id, destination_place_id, [], travel_mode,
+          //      directionsService, directionsDisplay);
         });
 
         destination_autocomplete.addListener('place_changed', function() {
@@ -127,35 +178,56 @@
           // If the place has a geometry, store its place ID and route if we have
           // the other place ID
           destination_place_id = place.place_id;
-          route(origin_place_id, destination_place_id, waypoint1_place_id, travel_mode,
-                directionsService, directionsDisplay);
+          // route(origin_place_id, destination_place_id, [], travel_mode,
+          //      directionsService, directionsDisplay);
         });
 
-        waypoint1_autocomplete.addListener('place_changed', function() {
-          var place = waypoint1_autocomplete.getPlace();
-          if (!place.geometry) {
+        $('#compare_prices_button').click(function comparePrices() {
+          var source = origin_autocomplete.getPlace();
+          if (!source.geometry) {
             window.alert("Autocomplete's returned place contains no geometry");
             return;
           }
-          expandViewportToFitPlace(map, place);
+          expandViewportToFitPlace(map, source);
+          var source_place_id = source.place_id;          
 
-          // If the place has a geometry, store its place ID and route if we have
-          // the other place ID
-          waypoint1_place_id = place.place_id;
-          route(origin_place_id, destination_place_id, waypoint1_place_id, travel_mode,
+          var destination = destination_autocomplete.getPlace();
+          if (!destination.geometry) {
+            window.alert("Autocomplete's returned place contains no geometry");
+            return;
+          }
+          expandViewportToFitPlace(map, destination);
+          var destination_id = destination.place_id;
+          
+          way_point_ids = []
+          for (var i=1; i <= myWayPointState.get(); ++i) {
+            var waypoint_name = eval("waypoint" + i + "_autocomplete");
+            var waypoint = waypoint_name.getPlace();
+            if (!waypoint.geometry) {
+              window.alert("Autocomplete's returned place contains no geometry");
+              return; 
+            }
+            
+            expandViewportToFitPlace(map, waypoint);
+            way_point_ids.push(waypoint.place_id);
+          }
+          route(origin_place_id, destination_place_id, way_point_ids, travel_mode,
                 directionsService, directionsDisplay);
         });
 
-
-        function route(origin_place_id, destination_place_id, waypoint1_place_id, 
+        function route(origin_place_id, destination_place_id, way_point_ids,
                        travel_mode, directionsService, directionsDisplay) {
-          if (!origin_place_id || !destination_place_id || !waypoint1_place_id) {
+          if (!origin_place_id || !destination_place_id) {
             return;
+          }
+          waypoints = []
+          for (var i=0; i < way_point_ids.length; ++i) {
+            waypoints.push({'location': {'placeId': way_point_ids[i]}, 'stopover': true });
           }
           directionsService.route({
             origin: {'placeId': origin_place_id},
             destination: {'placeId': destination_place_id},
-            waypoints : [{'location': {'placeId': waypoint1_place_id }, 'stopover': true}],
+            waypoints: waypoints,
             optimizeWaypoints: true,
             travelMode: travel_mode
           }, function(response, status) {
