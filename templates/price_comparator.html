@@ -46,6 +46,12 @@
             <label for="autocomplete-input">Destination</label>
           </div>
         </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="waypoint1-input" type="text" placeholder="WayPoint 1">
+            <label for="autocomplete-input">WayPoint1</label>
+          </div>
+        </div>
       </div>
 
       <div class="col s12 m8 l9" style="height:100%; width:75%;">
@@ -61,7 +67,8 @@
       function initMap() {
         var origin_place_id = null;
         var destination_place_id = null;
-        var travel_mode = 'WALKING';
+        var waypoint1_place_id = null;
+        var travel_mode = 'DRIVING';
         var map = new google.maps.Map(document.getElementById('map'), {
           mapTypeControl: false,
           center: {lat: 37.3388, lng: -121.8895},
@@ -73,12 +80,17 @@
 
         var origin_input = document.getElementById('origin-input');
         var destination_input = document.getElementById('destination-input');
+        var waypoint1_input = document.getElementById('waypoint1-input');
 
         var origin_autocomplete = new google.maps.places.Autocomplete(origin_input);
         origin_autocomplete.bindTo('bounds', map);
         var destination_autocomplete =
             new google.maps.places.Autocomplete(destination_input);
         destination_autocomplete.bindTo('bounds', map);
+        var waypoint1_autocomplete =
+            new google.maps.places.Autocomplete(waypoint1_input);
+        waypoint1_autocomplete.bindTo('bounds', map);
+
 
         function expandViewportToFitPlace(map, place) {
           if (place.geometry.viewport) {
@@ -100,7 +112,7 @@
           // If the place has a geometry, store its place ID and route if we have
           // the other place ID
           origin_place_id = place.place_id;
-          route(origin_place_id, destination_place_id, travel_mode,
+          route(origin_place_id, destination_place_id, waypoint1_place_id, travel_mode,
                 directionsService, directionsDisplay);
         });
 
@@ -115,18 +127,36 @@
           // If the place has a geometry, store its place ID and route if we have
           // the other place ID
           destination_place_id = place.place_id;
-          route(origin_place_id, destination_place_id, travel_mode,
+          route(origin_place_id, destination_place_id, waypoint1_place_id, travel_mode,
                 directionsService, directionsDisplay);
         });
 
-        function route(origin_place_id, destination_place_id, travel_mode,
-                       directionsService, directionsDisplay) {
-          if (!origin_place_id || !destination_place_id) {
+        waypoint1_autocomplete.addListener('place_changed', function() {
+          var place = waypoint1_autocomplete.getPlace();
+          if (!place.geometry) {
+            window.alert("Autocomplete's returned place contains no geometry");
+            return;
+          }
+          expandViewportToFitPlace(map, place);
+
+          // If the place has a geometry, store its place ID and route if we have
+          // the other place ID
+          waypoint1_place_id = place.place_id;
+          route(origin_place_id, destination_place_id, waypoint1_place_id, travel_mode,
+                directionsService, directionsDisplay);
+        });
+
+
+        function route(origin_place_id, destination_place_id, waypoint1_place_id, 
+                       travel_mode, directionsService, directionsDisplay) {
+          if (!origin_place_id || !destination_place_id || !waypoint1_place_id) {
             return;
           }
           directionsService.route({
             origin: {'placeId': origin_place_id},
             destination: {'placeId': destination_place_id},
+            waypoints : [{'location': {'placeId': waypoint1_place_id }, 'stopover': true}],
+            optimizeWaypoints: true,
             travelMode: travel_mode
           }, function(response, status) {
             if (status === 'OK') {
