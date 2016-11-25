@@ -1,4 +1,28 @@
-add your localhost username and password
+1.add your localhost username and passwordor rds instance details or it wont connect to database
+
+2.go to terminal
+
+  /usr/local/mysql/bin/mysql -u username -p 
+  enter password
+  
+  create database CMPE273 
+  
+  note- you can create database of any name as you wish just remember to change it in the code in database 2.py
+  
+  
+  
+  
+     db = MySQLdb.connect(host="localhost",  # your host, usually localhost
+                         user="root",  # your username
+                         passwd="********",
+                         db="CMPE273")  # your password
 
 
-or rds instance details or it wont connect to database
+
+
+
+3. FOR rds connection
+  /usr/local/mysql/bin/mysql -h endpoint -P port number -u master username -p
+  master password
+
+4. run he file database 2 .py
