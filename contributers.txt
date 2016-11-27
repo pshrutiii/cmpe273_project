@@ -4,7 +4,7 @@ CMPE273-Fall16.
 
 The main contributers are:
 Avdeep Singh
-Chetan Sidhu
+Gurchetan Bir Sidhu
 Sanisha Rehan
 Shruti Dev
 ###############################################################################
