@@ -8,20 +8,13 @@
   </thead>
   
   <tbody>
+    {% for company, stats in result|dictsort %}
     <tr>
-      <td>Lyft</td>
-      <td>${{ ((lyft[0]['Lyft']['low_price_dollars'] + 
-                  lyft[0]['Lyft']['high_price_dollars']) *  
-                lyft[0]['Lyft']['multiplier'])|round(2)}}</td>
-      <td>${{ (lyft[0]['Lyft']['duration_sec'] / 60.0)|round(2) }}</td>
+      <td>{{ company }}</td>
+      <td>${{ stats['avg_cost'] }} </td>
+      <td>{{ stats['total_time'] }} mins </td>
     </tr>
-    <tr>
-      <td>UberX</td>
-      <td>${{ ((uber[0]['uberX']['low_price_dollars'] + 
-                  uber[0]['uberX']['high_price_dollars']) *  
-                uber[0]['uberX']['multiplier'])|round(2)}}</td>
-      <td>${{ (uber[0]['uberX']['duration_sec'] / 60.0)|round(2) }}</td>
-    </tr>
+    {% endfor %}
   </tbody>
 </table>
 

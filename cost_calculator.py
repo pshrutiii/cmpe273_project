@@ -27,6 +27,7 @@ class UberCalculator(object):
 
     price_map = {}
     for packet in response.json()['prices']:
+      # TODO: handle the case when no costs are returned, return appropriate errors.
       price_map[packet['display_name']] = \
           {'low_price_dollars' : packet['low_estimate'],
            'high_price_dollars' : packet['high_estimate'],
@@ -63,6 +64,7 @@ class LyftCalculator(object):
     
     price_map = {}
     for packet in response.json()['cost_estimates']:
+      # TODO: handle the case when no costs are returned, return appropriate errors.
       price_map[packet['display_name']] = \
           {'low_price_dollars' : packet['estimated_cost_cents_min'] / 100,
            'high_price_dollars' : packet['estimated_cost_cents_max'] / 100,

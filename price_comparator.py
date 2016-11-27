@@ -21,14 +21,14 @@ def trips():
   destination = request.args['destination']
   waypoints = request.args['waypoints']
 
-  ans = find_direction(MAPS_KEY, origin, destination, waypoints).json()
+  calculated_route = find_direction(MAPS_KEY, origin, destination, waypoints).json()
 
   lyft = LyftCalculator()
   uber = UberCalculator()
 
   lyft_metrics = []
   uber_metrics = []
-  for leg in ans['routes'][0]['legs']:
+  for leg in calculated_route['routes'][0]['legs']:
     start_lat = leg['start_location']['lat']
     start_lng = leg['start_location']['lng']
     end_lat = leg['end_location']['lat']
@@ -36,10 +36,34 @@ def trips():
     lyft_metrics.append(lyft.get_route_metrics(start_lat, start_lng, end_lat, end_lng))
     uber_metrics.append(uber.get_route_metrics(start_lat, start_lng, end_lat, end_lng))
   
-  result = {'lyft' : lyft_metrics, 'uber' : uber_metrics, 
-            'waypoint_order' : ans['routes'][0]['waypoint_order']}
-  print result
-  return render_template('analysis.html', lyft=lyft_metrics, uber=uber_metrics)
+  combined_metrics = []
+  for i in range(len(uber_metrics)):
+    lyft_route_metrics = lyft_metrics[i]
+    uber_route_metrics = uber_metrics[i]
+    combined_route_metrics = lyft_route_metrics.copy()
+    combined_route_metrics.update(uber_route_metrics)
+    combined_metrics.append(combined_route_metrics)
+
+  result_metrics = {}
+
+  # NOTE: If we want to add additional options like UberXL, etc, just add a name here. 
+  for company in ['uberX', 'Lyft', 'uberXL', 'Lyft Line']: # ['uberXL', 'Lyft Plus', 'Lyft Line']
+    values = {'name' : company.capitalize()}
+    avg_cost = 0
+    total_time = 0
+    for i in range(len(combined_metrics)):
+      avg_cost += (combined_metrics[i][company]['low_price_dollars'] +
+                    combined_metrics[i][company]['high_price_dollars']) * \
+                  combined_metrics[i][company]['multiplier']
+      total_time += combined_metrics[i][company]['duration_sec'] / 60.0
+    values['avg_cost'] = round(avg_cost / len(combined_metrics), 2)
+    values['total_time'] = round(total_time, 1)
+    result_metrics[company] = values
+ 
+  # result = {'lyft' : lyft_metrics, 'uber' : uber_metrics, 
+  #          'waypoint_order' : ans['routes'][0]['waypoint_order']}
+  
+  return render_template('analysis.html', result=result_metrics)
 
 @app.route("/")
 def price_comparator():

@@ -112,13 +112,20 @@ function initMap() {
     route(source_place_id, destination_place_id, way_point_ids, travel_mode,
           directionsService, directionsDisplay);
 
+    // Update GUI to show search under the way.
+    var searching_html =  `
+         Fetching best prices
+         <div class="progress">\
+            <div class="indeterminate"></div>\
+         </div>`;
+    document.getElementById('result_holder').innerHTML = searching_html;
+
+    // Ajax query to backend for trip REST API.
     $.get('/trips', {'origin' : source_cordinates,
                      'destination' : destination_cordinates,
                      'waypoints' : waypoint_string})
     .done(function(response) {
-        console.log(response)
-        document.getElementById("result_holder").innerHTML = response;
-        //console.log(response);
+      document.getElementById("result_holder").innerHTML = response;
     });
     document.getElementById('map_holder').style.width = "50%";
   });
