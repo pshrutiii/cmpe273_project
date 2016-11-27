@@ -21,7 +21,6 @@ def trips():
   destination = request.args['destination']
   waypoints = request.args['waypoints']
   formatted_addresses = request.args['formatted_addresses'].split("__||__")
-  print formatted_addresses
 
   calculated_route = find_direction(MAPS_KEY, origin, destination, waypoints).json()
 
@@ -54,9 +53,7 @@ def trips():
     avg_cost = 0
     total_time = 0
     for i in range(len(combined_metrics)):
-      avg_cost += (combined_metrics[i][company]['low_price_dollars'] +
-                    combined_metrics[i][company]['high_price_dollars']) * \
-                  combined_metrics[i][company]['multiplier']
+      avg_cost += combined_metrics[i][company]['low_price_dollars'] * combined_metrics[i][company]['multiplier']
       total_time += combined_metrics[i][company]['duration_sec'] / 60.0
     values['avg_cost'] = round(avg_cost / len(combined_metrics), 2)
     values['total_time'] = round(total_time, 1)

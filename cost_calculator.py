@@ -1,3 +1,5 @@
+# NOTE: This file leverages/references code present in liftupdate.py.
+
 # This module is responsible for calculating costs
 # for a given path(longitude, latitude). We would 
 # implement various classes for the same.

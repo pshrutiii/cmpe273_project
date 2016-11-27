@@ -10,11 +10,11 @@ def find_direction(key, origin, destination, waypoints):
 
   directions_rest_api += "origin=" + origin
   directions_rest_api += "&destination=" + destination
-  directions_rest_api += "&waypoints=" + waypoints
   directions_rest_api += "&key=" + key
 
   # Solve travelling salesman problem for finding best route.
-  directions_rest_api += "&optimize:true"
+  directions_rest_api += "&waypoints="
+  directions_rest_api  += "optimize:true|" + waypoints
 
   response = requests.get(directions_rest_api);
 
