@@ -50,12 +50,12 @@ def trips():
   # NOTE: If we want to add additional options like UberXL, etc, just add a name here. 
   for company in ['uberX', 'Lyft', 'uberXL', 'Lyft Plus']: # ['uberXL', 'Lyft Plus', 'Lyft Line']
     values = {'name' : company.capitalize()}
-    avg_cost = 0
+    min_cost = 0
     total_time = 0
     for i in range(len(combined_metrics)):
-      avg_cost += combined_metrics[i][company]['low_price_dollars'] * combined_metrics[i][company]['multiplier']
+      min_cost += combined_metrics[i][company]['low_price_dollars'] * combined_metrics[i][company]['multiplier']
       total_time += combined_metrics[i][company]['duration_sec'] / 60.0
-    values['avg_cost'] = round(avg_cost / len(combined_metrics), 2)
+    values['cost'] = round(min_cost, 2)
     values['total_time'] = round(total_time, 1)
     result_metrics[company] = values
  
