@@ -20,6 +20,8 @@ def trips():
   origin = request.args['origin']
   destination = request.args['destination']
   waypoints = request.args['waypoints']
+  formatted_addresses = request.args['formatted_addresses'].split("__||__")
+  print formatted_addresses
 
   calculated_route = find_direction(MAPS_KEY, origin, destination, waypoints).json()
 
@@ -47,7 +49,7 @@ def trips():
   result_metrics = {}
 
   # NOTE: If we want to add additional options like UberXL, etc, just add a name here. 
-  for company in ['uberX', 'Lyft', 'uberXL', 'Lyft Line']: # ['uberXL', 'Lyft Plus', 'Lyft Line']
+  for company in ['uberX', 'Lyft', 'uberXL', 'Lyft Plus']: # ['uberXL', 'Lyft Plus', 'Lyft Line']
     values = {'name' : company.capitalize()}
     avg_cost = 0
     total_time = 0
@@ -60,10 +62,15 @@ def trips():
     values['total_time'] = round(total_time, 1)
     result_metrics[company] = values
  
-  # result = {'lyft' : lyft_metrics, 'uber' : uber_metrics, 
-  #          'waypoint_order' : ans['routes'][0]['waypoint_order']}
-  
-  return render_template('analysis.html', result=result_metrics)
+  route = []
+  route.append("A) " + formatted_addresses[0])
+  path_index = 'B'
+  for waypoint_index in calculated_route['routes'][0]['waypoint_order']:
+    route.append(path_index + ") " + formatted_addresses[2+waypoint_index])
+    path_index = chr(ord(path_index) + 1)
+  route.append(path_index + ") " + formatted_addresses[1])
+
+  return render_template('analysis.html', result=result_metrics, route=route)
 
 @app.route("/")
 def price_comparator():

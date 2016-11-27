@@ -69,11 +69,13 @@ function initMap() {
   }
 
   $('#compare_prices_button').click(function comparePrices() {
+    var formatted_addresses = []
     var source = origin_autocomplete.getPlace();
     if (!source.geometry) {
       window.alert("Autocomplete's returned place contains no geometry");
       return;
     }
+    formatted_addresses.push(source.formatted_address);
     expandViewportToFitPlace(map, source);
     var source_place_id = source.place_id;          
 
@@ -82,6 +84,7 @@ function initMap() {
       window.alert("Autocomplete's returned place contains no geometry");
       return;
     }
+    formatted_addresses.push(destination.formatted_address);
     expandViewportToFitPlace(map, destination);
     var destination_place_id = destination.place_id;
     
@@ -95,6 +98,7 @@ function initMap() {
         return; 
       }
       
+      formatted_addresses.push(waypoint.formatted_address);
       expandViewportToFitPlace(map, waypoint);
       way_point_ids.push(waypoint.place_id);
       if (i != 1) {
@@ -121,11 +125,22 @@ function initMap() {
     document.getElementById('result_holder').innerHTML = searching_html;
 
     // Ajax query to backend for trip REST API.
+    actual_addresses_string = ""
+    for (var i=0; i < formatted_addresses.length; ++i) {
+      actual_addresses_string += formatted_addresses[i]
+      if (i != formatted_addresses.length) {
+        actual_addresses_string += "__||__";
+      }
+    }
     $.get('/trips', {'origin' : source_cordinates,
                      'destination' : destination_cordinates,
+                     'formatted_addresses' : actual_addresses_string,
                      'waypoints' : waypoint_string})
     .done(function(response) {
       document.getElementById("result_holder").innerHTML = response;
+    })
+    .fail(function(response) {
+      document.getElementById("result_holder").innerHTML = "Server Error.";
     });
     document.getElementById('map_holder').style.width = "50%";
   });

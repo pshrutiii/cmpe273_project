@@ -18,3 +18,19 @@
   </tbody>
 </table>
 
+<br>
+
+<table class="striped bordered">
+  <thead>
+    <th data-field="route">Route</th>
+  </thead>
+ 
+  <tbody>
+    {% for location in route%}
+    <tr>
+      <td>{{ location }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
