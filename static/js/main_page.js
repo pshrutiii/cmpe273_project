@@ -68,36 +68,6 @@ function initMap() {
     }
   }
 
-  origin_autocomplete.addListener('place_changed', function() {
-    var place = origin_autocomplete.getPlace();
-    if (!place.geometry) {
-      window.alert("Autocomplete's returned place contains no geometry");
-      return;
-    }
-    expandViewportToFitPlace(map, place);
-
-    // If the place has a geometry, store its place ID and route if we have
-    // the other place ID
-    origin_place_id = place.place_id;
-    // route(origin_place_id, destination_place_id, [], travel_mode,
-    //      directionsService, directionsDisplay);
-  });
-
-  destination_autocomplete.addListener('place_changed', function() {
-    var place = destination_autocomplete.getPlace();
-    if (!place.geometry) {
-      window.alert("Autocomplete's returned place contains no geometry");
-      return;
-    }
-    expandViewportToFitPlace(map, place);
-
-    // If the place has a geometry, store its place ID and route if we have
-    // the other place ID
-    destination_place_id = place.place_id;
-    // route(origin_place_id, destination_place_id, [], travel_mode,
-    //      directionsService, directionsDisplay);
-  });
-
   $('#compare_prices_button').click(function comparePrices() {
     var source = origin_autocomplete.getPlace();
     if (!source.geometry) {
@@ -113,9 +83,10 @@ function initMap() {
       return;
     }
     expandViewportToFitPlace(map, destination);
-    var destination_id = destination.place_id;
+    var destination_place_id = destination.place_id;
     
     way_point_ids = [];
+    waypoint_string = "";
     for (var i=1; i <= myWayPointState.get(); ++i) {
       var waypoint_name = eval("waypoint" + i + "_autocomplete");
       var waypoint = waypoint_name.getPlace();
@@ -126,10 +97,29 @@ function initMap() {
       
       expandViewportToFitPlace(map, waypoint);
       way_point_ids.push(waypoint.place_id);
+      if (i != 1) {
+        waypoint_string += "|";
+      }
+      waypoint_string += waypoint.geometry.location.lat() + "," +
+        waypoint.geometry.location.lng();
     }
-    route(origin_place_id, destination_place_id, way_point_ids, travel_mode,
+    
+    var source_cordinates = source.geometry.location.lat() + "," +
+      source.geometry.location.lng();
+    var destination_cordinates = destination.geometry.location.lat() + "," +
+      destination.geometry.location.lng();
+    
+    route(source_place_id, destination_place_id, way_point_ids, travel_mode,
           directionsService, directionsDisplay);
 
+    $.get('/trips', {'origin' : source_cordinates,
+                     'destination' : destination_cordinates,
+                     'waypoints' : waypoint_string})
+    .done(function(response) {
+        console.log(response)
+        document.getElementById("result_holder").innerHTML = response;
+        //console.log(response);
+    });
     document.getElementById('map_holder').style.width = "50%";
   });
 

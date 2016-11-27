@@ -21,63 +21,42 @@
     {{ super() }}
     <div class="row" style="height:100%; width=100%">
       <div class="col s12 m3 l3">
-          <div class="input-field col s12">
-            <input id="origin-input" type="text" placeholder="Enter an origin location">
-            <label for="autocomplete-input">Source</label>
-          </div>
-          <div class="input-field col s12">
-            <input id="destination-input" type="text" placeholder="Enter a destination location">
-            <label for="autocomplete-input">Destination</label>
-          </div>
-          <div class="input-field col s12" id="waypoint-holder-1" style="display:none">
-            <input id="waypoint-input-1" type="text" placeholder="Enter first waypoint">
-            <label for="autocomplete-input">Waypoint 1</label>
-          </div>
-          <div class="input-field col s12" id="waypoint-holder-2" style="display:none">
-            <input id="waypoint-input-2" type="text" placeholder="Enter second waypoint">
-            <label for="autocomplete-input">Waypoint 2</label>
-          </div>
-          <div class="input-field col s12" id="waypoint-holder-3" style="display:none">
-            <input id="waypoint-input-3" type="text" placeholder="Enter third waypoint">
-            <label for="autocomplete-input">Waypoint 3</label>
-          </div>
-          <div class="input-field col s12" id="addwaypoint_holder">
-            <a class="btn-floating btn waves-effect waves-light red tooltipped" 
-               data-position="right" data-tooltip="Add Another Stop" onclick="addWayPoint();">
-              <i class="material-icons">add</i>
-            </a>
-          </div>
-          <div class="input-field col s12">
-            <a class="waves-effect waves-light btn" id="compare_prices_button" type="submit">Compare Prices</a>
-          </div>
+        <div class="input-field col s12">
+          <input id="origin-input" type="text" placeholder="Enter an origin location">
+          <label for="autocomplete-input">Source</label>
+        </div>
+        <div class="input-field col s12">
+          <input id="destination-input" type="text" placeholder="Enter a destination location">
+          <label for="autocomplete-input">Destination</label>
+        </div>
+        <div class="input-field col s12" id="waypoint-holder-1" style="display:none">
+          <input id="waypoint-input-1" type="text" placeholder="Enter first waypoint">
+          <label for="autocomplete-input">Waypoint 1</label>
+        </div>
+        <div class="input-field col s12" id="waypoint-holder-2" style="display:none">
+          <input id="waypoint-input-2" type="text" placeholder="Enter second waypoint">
+          <label for="autocomplete-input">Waypoint 2</label>
+        </div>
+        <div class="input-field col s12" id="waypoint-holder-3" style="display:none">
+          <input id="waypoint-input-3" type="text" placeholder="Enter third waypoint">
+          <label for="autocomplete-input">Waypoint 3</label>
+        </div>
+        <div class="input-field col s12" id="addwaypoint_holder">
+          <a class="btn-floating btn waves-effect waves-light red tooltipped" 
+             data-position="right" data-tooltip="Add Another Stop" onclick="addWayPoint();">
+            <i class="material-icons">add</i>
+          </a>
+        </div>
+        <div class="input-field col s12">
+          <a class="waves-effect waves-light btn" id="compare_prices_button" type="submit">Compare Prices</a>
+        </div>
       </div>
 
       <div class="col s12 m6 l6" style="height:100%; width:50%;" id="map_holder">
         <div id="map"></div>
       </div>      
 
-      <div class="col s12 m3 l3"><!-- style="display:none"> -->
-        <div class="row">
-          <table class="striped bordered" id="results">
-            <thead>
-              <tr>
-                  <th data-field="id">Provider</th>
-                  <th data-field="name">Cost</th>
-              </tr>
-            </thead>
-    
-            <tbody>
-              <tr>
-                <td>Uber</td>
-                <td>$0.87</td>
-              </tr>
-              <tr>
-                <td>Lyft</td>
-                <td>$3.76</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="col s12 m3 l3" id="result_holder"><!-- style="display:none"> -->
       </div>  
       
     </div>

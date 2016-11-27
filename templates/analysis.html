@@ -1,0 +1,27 @@
+<table class="striped bordered" id="results">
+  <thead>
+    <tr>
+        <th data-field="id">Provider</th>
+        <th data-field="name">Appx. Cost</th>
+        <th data-field="time">Est. Time</th>
+    </tr>
+  </thead>
+  
+  <tbody>
+    <tr>
+      <td>Lyft</td>
+      <td>${{ ((lyft[0]['Lyft']['low_price_dollars'] + 
+                  lyft[0]['Lyft']['high_price_dollars']) *  
+                lyft[0]['Lyft']['multiplier'])|round(2)}}</td>
+      <td>${{ (lyft[0]['Lyft']['duration_sec'] / 60.0)|round(2) }}</td>
+    </tr>
+    <tr>
+      <td>UberX</td>
+      <td>${{ ((uber[0]['uberX']['low_price_dollars'] + 
+                  uber[0]['uberX']['high_price_dollars']) *  
+                uber[0]['uberX']['multiplier'])|round(2)}}</td>
+      <td>${{ (uber[0]['uberX']['duration_sec'] / 60.0)|round(2) }}</td>
+    </tr>
+  </tbody>
+</table>
+
