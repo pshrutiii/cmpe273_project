@@ -2,7 +2,7 @@
   <thead>
     <tr>
         <th data-field="id">Provider</th>
-        <th data-field="name">Appx. Cost</th>
+        <th data-field="name">Min. Cost</th>
         <th data-field="time">Est. Time</th>
     </tr>
   </thead>
@@ -11,7 +11,7 @@
     {% for company, stats in result|dictsort %}
     <tr>
       <td>{{ company }}</td>
-      <td>${{ stats['avg_cost'] }} </td>
+      <td>${{ stats['cost'] }} </td>
       <td>{{ stats['total_time'] }} mins </td>
     </tr>
     {% endfor %}
