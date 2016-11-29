@@ -29,6 +29,9 @@ NULL,uber_x_surge FLOAT(3,2) NOT NULL,uber_xl_surge FLOAT(3,2) NOT NULL, lyft_li
 4.CREATE TABLE UserAppUsageHistory (User_id int NOT NULL ,start_address VARCHAR(500) NOT NULL,destination_address
  VARCHAR(500) NOT NULL,number_of_waypoints int NOT NULL,request_day date NOT NULL,request_time timestamp
  NOT NULL,FOREIGN KEY (User_id)   REFERENCES user_table(User_id));
+ 
+5.CREATE TABLE Tags (id int NOT NULL AUTO_INCREMENT,User_id int NOT NULL ,TAGaddress VARCHAR(500) NOT NULL,TAGname
+ VARCHAR(500) NOT NULL,PRIMARY KEY (id),FOREIGN KEY (User_id) REFERENCES user_table(User_id));
 
 
 
