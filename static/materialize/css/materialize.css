@@ -2217,6 +2217,17 @@ template {
   display: none;
 }
 
+#origin-input, #destination-input{
+  width: 90%;
+}
+
+.btn-star{
+    color: black;
+    cursor:pointer;
+}
+.btn-star:hover{
+    color: #F5D04C;
+}
 /* Links
    ========================================================================== */
 /**
@@ -3348,6 +3359,7 @@ input[type=range] + .thumb {
   -webkit-font-feature-settings: 'liga';
      -moz-font-feature-settings: 'liga';
           font-feature-settings: 'liga';
+  width: 25px;
 }
 
 .container {
