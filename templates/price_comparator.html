@@ -19,37 +19,96 @@
 
   {% block mainbody %}
     {{ super() }}
+
+
+<!-- Modal Structure -->
+  <div id="origin-tag" class="modal">
+    <div class="modal-content">
+      <p>Add a Label</p>
+      <input id="origin-label-input" type="text" placeholder="Enter label">
+    </div>
+    <div class="modal-footer">
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat" onclick="addTag();">Add</a>
+    </div>
+  </div>
+<div id="destination-tag" class="modal">
+    <div class="modal-content">
+      <p>Add a Label</p>
+      <input id="destination-label-input" type="text" placeholder="Enter label">
+    </div>
+    <div class="modal-footer">
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat" onclick="addTag();">Add</a>
+    </div>
+  </div>
+<div id="waypoint-1-tag" class="modal">
+    <div class="modal-content">
+      <p>Add a Label</p>
+      <input id="waypoint-1-label-input" type="text" placeholder="Enter label">
+    </div>
+    <div class="modal-footer">
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat" onclick="addTag();">Add</a>
+    </div>
+  </div>
+<div id="waypoint-2-tag" class="modal">
+    <div class="modal-content">
+      <p>Add a Label</p>
+      <input id="waypoint-2-input" type="text" placeholder="Enter label">
+    </div>
+    <div class="modal-footer">
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat" onclick="addTag();">Add</a>
+    </div>
+  </div>
+<div id="waypoint-3-tag" class="modal">
+    <div class="modal-content">
+      <p>Add a Label</p>
+      <input id="waypoint-3-label-input" type="text" placeholder="Enter label">
+    </div>
+    <div class="modal-footer">
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat" onclick="addTag();">Add</a>
+    </div>
+  </div>
+
     <div class="row" style="height:100%; width=100%">
       <div class="col s12 m3 l3">
         <div class="input-field col s12">
           <input id="origin-input" type="text" placeholder="Enter an origin location">
-          <a class="btn-star tooltipped"
-             data-position="right" data-tooltip="Save" onclick="addTag();">
-          <i class="material-icons">star_rate</i></a>
+            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#origin-tag">
+                <i class="material-icons">star_rate</i>
+            </a>
           <label for="autocomplete-input">Source</label>
 
         </div>
         <div class="input-field col s12">
           <input id="destination-input" type="text" placeholder="Enter a destination location">
-          <a class="btn-star tooltipped"
-             data-position="right" data-tooltip="Save" onclick="addTag();">
-          <i class="material-icons">star_rate</i></a>
+            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#destination-tag">
+                <i class="material-icons">star_rate</i>
+            </a>
           <label for="autocomplete-input">Destination</label>
         </div>
         <div class="input-field col s12" id="waypoint-holder-1" style="display:none">
           <input id="waypoint-input-1" type="text" placeholder="Enter first waypoint">
+            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#waypoint-1-tag">
+                <i class="material-icons">star_rate</i>
+            </a>
+
           <label for="autocomplete-input">Waypoint 1</label>
         </div>
         <div class="input-field col s12" id="waypoint-holder-2" style="display:none">
           <input id="waypoint-input-2" type="text" placeholder="Enter second waypoint">
+            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#waypoint-2-tag">
+                <i class="material-icons">star_rate</i>
+            </a>
           <label for="autocomplete-input">Waypoint 2</label>
         </div>
         <div class="input-field col s12" id="waypoint-holder-3" style="display:none">
           <input id="waypoint-input-3" type="text" placeholder="Enter third waypoint">
+            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#waypoint-3-tag">
+                <i class="material-icons">star_rate</i>
+            </a>
           <label for="autocomplete-input">Waypoint 3</label>
         </div>
         <div class="input-field col s12" id="addwaypoint_holder">
-          <a class="btn-floating btn waves-effect waves-light red tooltipped" 
+          <a class="btn-floating btn waves-effect waves-light red tooltipped"
              data-position="right" data-tooltip="Add Another Stop" onclick="addWayPoint();">
             <i class="material-icons">add</i>
           </a>
@@ -74,4 +133,34 @@
       <script type="text/javascript" src="../static/js/main_page.js"></script>
       <script src="https://maps.googleapis.com/maps/api/js?key={{ maps_key }}&libraries=places&callback=initMap"
         async defer></script>
-    {% endblock %} <!-- End of javascript block -->
+<script>
+    $(document).ready(function(){
+    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+    $('.modal').modal();
+    });
+
+    function addTag(){
+        if($('#origin-input').val().length != 0){
+            var a = $('#origin-input').val();
+            //alert('Addr= ' + a + " : Label = " + $('#origin-tag #origin-label-input').val());
+        }
+        if($('#destination-input').val().length != 0){
+            var b = $('#destination-input').val();
+            //alert('Addr= ' + b + " : Label = " + $('#destination-tag #destination-label-input').val());
+        }
+        if($('#waypoint-input-1').val().length != 0){
+            var c = $('#waypoint-input-1').val();
+            //alert('Addr= ' + c + " : Label = " + $('#waypoint-1-tag #waypoint-1-label-input').val());
+        }
+        if($('#waypoint-input-2').val().length != 0){
+            var d = $('#waypoint-input-2').val();
+            //alert('Addr= ' + d + " : Label = " + $('#waypoint-2-tag #waypoint-2-label-input').val());
+        }
+        if($('#waypoint-input-3').val().length != 0){
+            var e = $('#waypoint-input-3').val();
+            //alert('Addr= ' + e + " : Label = " + $('#waypoint-3-tag #waypoint-3-label-input').val());
+        }
+
+    }
+</script>
+{% endblock %} <!-- End of javascript block -->

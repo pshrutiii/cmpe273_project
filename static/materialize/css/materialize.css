@@ -2217,7 +2217,7 @@ template {
   display: none;
 }
 
-#origin-input, #destination-input{
+#origin-input, #destination-input, #waypoint-input-1, #waypoint-input-2, #waypoint-input-3{
   width: 90%;
 }
 
@@ -2228,6 +2228,20 @@ template {
 .btn-star:hover{
     color: #F5D04C;
 }
+
+#tag{
+    width: 30%;
+}
+#tag .modal-content{
+padding-bottom: 0px;
+}
+#tag .modal-footer{
+    font-size: small;
+}
+#tag .btn-flat{
+    color: red;
+}
+
 /* Links
    ========================================================================== */
 /**
