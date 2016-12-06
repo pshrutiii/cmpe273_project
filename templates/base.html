@@ -1,29 +1,89 @@
 <!DOCTYPE html>
 <html>
   <head>
-    {% block head %} 
+    {% block head %}
       <title>Uber Vs. Lift</title>
 
       <!--Import Google Icon Font-->
       <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
-      <link type="text/css" rel="stylesheet" href="static/materialize/css/materialize.css"  media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href="static/materialize/css/materialize.min.css"  media="screen,projection"/>
 
     {% endblock %}
+
+
+
+<style type="text/css">
+
+
+  ul {list-style: none;padding: 0px;margin: 0px;}
+  ul li {display: block;position: relative;float: left;}
+  li ul {display: none;}
+  ul li a {display: block;background: #196666;padding: 5px 10px 5px 10px;text-decoration: none; // buttons da background
+           white-space: nowrap;color: #FFFFFF;}
+  ul li a:hover {background: #CF6F71;}
+  li:hover ul {display: block; position: absolute;}
+  li:hover li {float: none;}
+  li:hover a {background: #521435;}
+  li:hover li a:hover {background: #CF6F71;}
+  #drop-nav li ul li {border-top: 0px;}
+
+
+#nav{
+    background : #000000;
+}
+ul.topnav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #196666; //uberlyft de piche vala color
+
+}
+
+
+/* Style the links inside the list items */
+ul.topnav li a {
+    color: #f2f2f2;  // test color
+    text-align: center;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of links on hover */
+ul.topnav li a:hover {background-color: #660033;} // hover color
+
+/* Hide the list item that contains the link that should open and close the topnav on small screens */
+ul.topnav li.icon {display: none;}
+</style>
+
   </head>
 
   <body>
+
+
+
     {% block navbar %}
       {% include 'navbar.html' %}
     {% endblock %}
-    
+
+
+
+
+
+
     {% block mainbody %}
     {% endblock %}
 
     {% block javascript %}
       <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="static/js/main_page.js"></script>
+
       <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
       <script type="text/javascript" src="static/materialize/js/materialize.min.js"></script>
     {% endblock %}
+
+
+
   </body>
 </html>

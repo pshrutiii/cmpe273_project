@@ -6,7 +6,7 @@ function addWayPoint() {
     $("#addwaypoint_holder").toggle();
   } 
 }
- 
+
 var myWayPointState = function() {
   // set up closure scope
   var state = 0;
@@ -68,7 +68,10 @@ function initMap() {
     }
   }
 
+
+
   $('#compare_prices_button').click(function comparePrices() {
+
     var formatted_addresses = []
     var source = origin_autocomplete.getPlace();
     if (!source.geometry) {
@@ -77,7 +80,7 @@ function initMap() {
     }
     formatted_addresses.push(source.formatted_address);
     expandViewportToFitPlace(map, source);
-    var source_place_id = source.place_id;          
+    var source_place_id = source.place_id;
 
     var destination = destination_autocomplete.getPlace();
     if (!destination.geometry) {
@@ -87,7 +90,7 @@ function initMap() {
     formatted_addresses.push(destination.formatted_address);
     expandViewportToFitPlace(map, destination);
     var destination_place_id = destination.place_id;
-    
+
     way_point_ids = [];
     waypoint_string = "";
     for (var i=1; i <= myWayPointState.get(); ++i) {
@@ -95,9 +98,9 @@ function initMap() {
       var waypoint = waypoint_name.getPlace();
       if (!waypoint.geometry) {
         window.alert("Autocomplete's returned place contains no geometry");
-        return; 
+        return;
       }
-      
+
       formatted_addresses.push(waypoint.formatted_address);
       expandViewportToFitPlace(map, waypoint);
       way_point_ids.push(waypoint.place_id);
@@ -107,12 +110,12 @@ function initMap() {
       waypoint_string += waypoint.geometry.location.lat() + "," +
         waypoint.geometry.location.lng();
     }
-    
+
     var source_cordinates = source.geometry.location.lat() + "," +
       source.geometry.location.lng();
     var destination_cordinates = destination.geometry.location.lat() + "," +
       destination.geometry.location.lng();
-    
+
     route(source_place_id, destination_place_id, way_point_ids, travel_mode,
           directionsService, directionsDisplay);
 
@@ -133,11 +136,11 @@ function initMap() {
       }
     }
 
-
     $.get('/trips', {'origin' : source_cordinates,
                      'destination' : destination_cordinates,
                      'formatted_addresses' : actual_addresses_string,
-                     'waypoints' : waypoint_string})
+                     'waypoints' : waypoint_string,
+                     })
     .done(function(response) {
       document.getElementById("result_holder").innerHTML = response;
     })
@@ -170,5 +173,7 @@ function initMap() {
       }
     });
   }
-}
 
+
+
+}

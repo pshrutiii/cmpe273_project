@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Signup</title>
+     {% with messages = get_flashed_messages() %}
+	  {% if messages %}
+	    {% for message in messages %}
+		 <div id="card-alert" class="card red">
+                      <div class="card-content white-text">
+                        <p><i class="mdi-action-info-outline"></i> {{message}}</p>
+
+                      </div>
+
+
+                    </div>
+
+		{% endfor %}
+	  {% endif %}
+	{% endwith %}
+  <!-- CORE CSS-->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/css/materialize.min.css">
+
+<style type="text/css">
+#ab{
+margin-top: .5cm;
+width:330px;
+
+}
+
+
+
+#aa{
+width:130px;
+height:130px;
+}
+
+html,
+body {
+    height: 100%;
+}
+html {
+    display: table;
+    margin: auto;
+}
+body {
+background : url("http://www.goodwp.com/images/201306/goodwp.com_28888.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+margin-top: 10cm;
+    display: table-cell;
+    vertical-align: middle;
+
+}
+.margin {
+  margin: 0 !important;
+}
+</style>
+
+</head>
+
+
+<body class="blue">
+
+
+  <div id="login-page" class="row">
+    <div id = ab class="col s12 z-depth-6 card-panel">
+        {% from "_formhelpers.html" import render_field %}
+     <form class="login-form" action="" method="post">
+         <div class="row">
+          <div class="input-field col s12 center">
+            <img  id = "aa" src="https://cdn4.iconfinder.com/data/icons/tralel-and-recreation/32/vacation_6-512.png" alt="" class="circle responsive-img valign profile-image-login">
+            <p class="center login-form-text">WELCOME TO BEST RIDE</p>
+          </div>
+        </div>
+         <div class="row margin">
+                            <i><strong>username</strong></i>
+
+          <div class="input-field col s12">
+            <i class="mdi-social-person-outline prefix"></i>
+				{{render_field(form.username)}}
+            <label  class="center-align"></label>
+          </div>
+        </div>
+
+
+         <div class="row margin">
+                                         <i><strong>password</strong></i>
+
+          <div class="input-field col s12">
+            <i class="mdi-action-lock-outline prefix"></i>
+				{{render_field(form.password)}}
+              <label  class="center-align"></label>
+          </div>
+        </div>
+
+         <div class="row margin">
+                                         <i><strong>repeat password</strong></i>
+
+          <div class="input-field col s12">
+            <i class="mdi-action-lock-outline prefix"></i>
+				{{render_field(form.confirm)}}
+            <label  class="center-align"></label>
+          </div>
+        </div>
+         <div class="row">
+          <div class="input-field col s12">
+       	  <button type="submit" class="btn waves-effect waves-light col s12" name="Register">Register</button>
+          </div>
+          <div class="input-field col s12">
+            <p class="margin center medium-small sign-up">Already have an account? <a href="http://127.0.0.1:5000/login">Login</a></p>
+          </div>
+        </div>
+      </form>
+    {% if error %}
+    <p class="error"><strong>Error:</strong>{{error}}</p>
+    {% endif %}
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

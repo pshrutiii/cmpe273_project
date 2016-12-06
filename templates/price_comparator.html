@@ -1,4 +1,4 @@
- {% extends "base.html" %}
+{% extends "base.html" %}
 
   {% block head %}
   {{ super() }}
@@ -13,18 +13,56 @@
       height: 100%;
       margin: 0;
       padding: 0;
+
+
     }
+
+
+
+
+    #origin-input, #destination-input, #waypoint-input-1, #waypoint-input-2, #waypoint-input-3{
+    width: 90%;
+  }
+  #tag{
+     width: 30%;
+ }
+ #tag .modal-content{
+ padding-bottom: 0px;
+ }
+ #tag .modal-footer{
+     font-size: small;
+ }
+#tag .btn-flat{
+     color: red;
+ }
+.btn-star:hover{
+      color: #F5D04C;
+  }
+  .btn-star{
+
+  }
+  #origin-input{
+
+  }
+  .input-field{
+        display: inline-block;
+
+  }
+
+
+
+
   </style>
   {% endblock %}
 
   {% block mainbody %}
     {{ super() }}
 
-
 <!-- Modal Structure -->
   <div id="add-tag-s" class="modal">
-    <div class="modal-content">
-      <p>Add a Label</p>
+    <div class="modal-content" >
+      <p id="para">Add a Label</p>
+
       <input id="add-tag-input" type="text" name="addtag_label" placeholder="Enter label">
     </div>
     <div class="modal-footer">
@@ -46,8 +84,8 @@
       <div class="col s12 m3 l3">
         <div class="input-field col s12">
           <input id="origin-input" name="addtag_addr" type="text" placeholder="Enter an origin location">
-            <a class="btn-star tooltipped" data-position="right"  data-tooltip="Save" href="#add-tag-s">
-                <i class="material-icons">star_rate</i>
+            <a class="btn-star tooltipped" data-position="right" onclick="starclick()" data-tooltip="Save" href="#add-tag-s">
+            <i class="material-icons">star_rate</i>
             </a>
           <label for="autocomplete-input">Source</label>
 
@@ -87,8 +125,93 @@
             <i class="material-icons">add</i>
           </a>
         </div>
+
+
+
+
+
+
+
         <div class="input-field col s12">
-          <a class="waves-effect waves-light btn" id="compare_prices_button" type="submit">Compare Prices</a>
+          <!--<button class="waves-effect waves-light btn" onclick="Function()" >MINIMUM PRICE</button>-->
+          <form action="#">
+            <p>
+              <input name="group1" type="radio" onclick='$.post( "/postmethod", {javascript_data: "minprice"});' id="test1" />
+              <label for="test1">Minimum Price</label>
+            </p>
+            <p>
+              <input name="group1" type="radio" onclick='$.post( "/postmethod", {javascript_data: "mindistance"});' id="test2" />
+              <label for="test2">Minimum Distance</label>
+            </p>
+
+          </form>
+          <br><br>
+          <button class="waves-effect waves-light btn"  id="compare_prices_button">COMPARE</button>
+          <script type="text/javascript">
+
+
+            document.getElementById("test2").checked = true;
+            function Function(){
+
+                $.post( "/postmethod", {
+                javascript_data: "data"
+                });
+
+            }
+
+            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        function starclick(){
+                if($('#origin-input').val().length == 0){
+                document.getElementById('para').innerHTML="SELECT TAG";
+                document.getElementById('add-tag-input').style.visibility = 'hidden';
+
+
+                    $('.modal').modal();
+                    var data = {{row|safe}};
+                    var keys = Object.keys(data);
+                    var values = Object.values(data);
+                    <!--console.log(keys);-->
+                    for(var i = 0; i < keys.length; i++){
+                      $('<button>')
+                          .attr('id', keys[i])
+                          .text(keys[i])
+                          .appendTo('.modal .modal-content');
+                    }
+            }else{
+                <!--$('.modal').modal();-->
+                 $(function() {
+                    $('#addtag').bind('click', function() {
+                      $.getJSON($SCRIPT_ROOT + '/addtag', {
+                        a: $('input[name="addtag_addr"]').val(),
+                        l: $('input[name="addtag_label"]').val()
+                      }, function(data) {
+                        alert(data.result);
+                      });
+                      return false;
+                    });
+                  });
+            }
+            if($('#destination-input').val().length != 0){
+                var b = $('#destination-input').val();
+                //alert('Addr= ' + b + " : Label = " + $('#destination-tag #destination-label-input').val());
+            }
+            if($('#waypoint-input-1').val().length != 0){
+                var c = $('#waypoint-input-1').val();
+                var a = $('#origin-input').val();
+                 var l = $('#origin-tag #origin-label-input').val();
+                //alert('Addr= ' + c + " : Label = " + $('#waypoint-1-tag #waypoint-1-label-input').val());
+            }
+            if($('#waypoint-input-2').val().length != 0){
+                var d = $('#waypoint-input-2').val();
+                //alert('Addr= ' + d + " : Label = " + $('#waypoint-2-tag #waypoint-2-label-input').val());
+            }
+            if($('#waypoint-input-3').val().length != 0){
+                var e = $('#waypoint-input-3').val();
+                //alert('Addr= ' + e + " : Label = " + $('#waypoint-3-tag #waypoint-3-label-input').val());
+            }
+        }
+          </script>
+
         </div>
       </div>
 
@@ -107,56 +230,4 @@
       <script type="text/javascript" src="../static/js/main_page.js"></script>
       <script src="https://maps.googleapis.com/maps/api/js?key={{ maps_key }}&libraries=places&callback=initMap"
         async defer></script>
-<script>
-    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-    $('.btn-star').click(function (){
-
-        if($('#origin-input').val().length == 0){
-            <!--$('.chooseModal').modal();-->
-            var data = {{row|safe}};
-            var keys = Object.keys(data);
-            var values = Object.values(data);
-            <!--console.log(keys);-->
-
-            for(var i = 0; i < keys.length; i++){
-              $('<button>')
-                  .attr('id', keys[i])
-                  .text(keys[i])
-                  .appendTo('.chooseModal .modal-content');
-            }
-        }else{
-            $('.modal').modal();
-             $(function() {
-                $('#addtag').bind('click', function() {
-                  $.getJSON($SCRIPT_ROOT + '/addtag', {
-                    a: $('input[name="addtag_addr"]').val(),
-                    l: $('input[name="addtag_label"]').val()
-                  }, function(data) {
-                    alert(data.result);
-                  });
-                  return false;
-                });
-              });
-        }
-        if($('#destination-input').val().length != 0){
-            var b = $('#destination-input').val();
-            //alert('Addr= ' + b + " : Label = " + $('#destination-tag #destination-label-input').val());
-        }
-        if($('#waypoint-input-1').val().length != 0){
-            var c = $('#waypoint-input-1').val();
-            var a = $('#origin-input').val();
-             var l = $('#origin-tag #origin-label-input').val();
-            //alert('Addr= ' + c + " : Label = " + $('#waypoint-1-tag #waypoint-1-label-input').val());
-        }
-        if($('#waypoint-input-2').val().length != 0){
-            var d = $('#waypoint-input-2').val();
-            //alert('Addr= ' + d + " : Label = " + $('#waypoint-2-tag #waypoint-2-label-input').val());
-        }
-        if($('#waypoint-input-3').val().length != 0){
-            var e = $('#waypoint-input-3').val();
-            //alert('Addr= ' + e + " : Label = " + $('#waypoint-3-tag #waypoint-3-label-input').val());
-        }
-
-    });
-</script>
-{% endblock %} <!-- End of javascript block -->
+    {% endblock %} <!-- End of javascript block -->

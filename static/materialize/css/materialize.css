@@ -2217,31 +2217,6 @@ template {
   display: none;
 }
 
-#origin-input, #destination-input, #waypoint-input-1, #waypoint-input-2, #waypoint-input-3{
-  width: 90%;
-}
-
-.btn-star{
-    color: black;
-    cursor:pointer;
-}
-.btn-star:hover{
-    color: #F5D04C;
-}
-
-#tag{
-    width: 30%;
-}
-#tag .modal-content{
-padding-bottom: 0px;
-}
-#tag .modal-footer{
-    font-size: small;
-}
-#tag .btn-flat{
-    color: red;
-}
-
 /* Links
    ========================================================================== */
 /**
@@ -3373,7 +3348,6 @@ input[type=range] + .thumb {
   -webkit-font-feature-settings: 'liga';
      -moz-font-feature-settings: 'liga';
           font-feature-settings: 'liga';
-  width: 25px;
 }
 
 .container {
