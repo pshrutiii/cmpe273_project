@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+ {% extends "base.html" %}
 
   {% block head %}
   {{ super() }}
@@ -22,57 +22,31 @@
 
 
 <!-- Modal Structure -->
-  <div id="origin-tag" class="modal">
+  <div id="add-tag-s" class="modal">
     <div class="modal-content">
       <p>Add a Label</p>
-      <input id="origin-label-input" type="text" placeholder="Enter label">
+      <input id="add-tag-input" type="text" name="addtag_label" placeholder="Enter label">
     </div>
     <div class="modal-footer">
-      <a class=" modal-action modal-close waves-effect waves-green btn-flat" onclick="addTag();">Add</a>
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat" id="addtag">Add</a>
     </div>
   </div>
-<div id="destination-tag" class="modal">
-    <div class="modal-content">
-      <p>Add a Label</p>
-      <input id="destination-label-input" type="text" placeholder="Enter label">
-    </div>
-    <div class="modal-footer">
-      <a class=" modal-action modal-close waves-effect waves-green btn-flat" onclick="addTag();">Add</a>
-    </div>
-  </div>
-<div id="waypoint-1-tag" class="modal">
-    <div class="modal-content">
-      <p>Add a Label</p>
-      <input id="waypoint-1-label-input" type="text" placeholder="Enter label">
-    </div>
-    <div class="modal-footer">
-      <a class=" modal-action modal-close waves-effect waves-green btn-flat" onclick="addTag();">Add</a>
-    </div>
-  </div>
-<div id="waypoint-2-tag" class="modal">
-    <div class="modal-content">
-      <p>Add a Label</p>
-      <input id="waypoint-2-input" type="text" placeholder="Enter label">
-    </div>
-    <div class="modal-footer">
-      <a class=" modal-action modal-close waves-effect waves-green btn-flat" onclick="addTag();">Add</a>
-    </div>
-  </div>
-<div id="waypoint-3-tag" class="modal">
-    <div class="modal-content">
-      <p>Add a Label</p>
-      <input id="waypoint-3-label-input" type="text" placeholder="Enter label">
-    </div>
-    <div class="modal-footer">
-      <a class=" modal-action modal-close waves-effect waves-green btn-flat" onclick="addTag();">Add</a>
-    </div>
-  </div>
+
+ <!--<div id="choose-tag-s" class="chooseModal">-->
+    <!--<div class="modal-content">-->
+      <!--<p>Choose a Tag</p>-->
+      <!--<input id="choose-tag-input" type="text" name="addtag_label" placeholder="Enter label">-->
+    <!--</div>-->
+    <!--<div class="modal-footer">-->
+      <!--&lt;!&ndash;<a class=" modal-action modal-close waves-effect waves-green btn-flat" id="addtag2">Add</a>&ndash;&gt;-->
+    <!--</div>-->
+  <!--</div>-->
 
     <div class="row" style="height:100%; width=100%">
       <div class="col s12 m3 l3">
         <div class="input-field col s12">
-          <input id="origin-input" type="text" placeholder="Enter an origin location">
-            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#origin-tag">
+          <input id="origin-input" name="addtag_addr" type="text" placeholder="Enter an origin location">
+            <a class="btn-star tooltipped" data-position="right"  data-tooltip="Save" href="#add-tag-s">
                 <i class="material-icons">star_rate</i>
             </a>
           <label for="autocomplete-input">Source</label>
@@ -80,14 +54,14 @@
         </div>
         <div class="input-field col s12">
           <input id="destination-input" type="text" placeholder="Enter a destination location">
-            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#destination-tag">
+            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#add-tag-d">
                 <i class="material-icons">star_rate</i>
             </a>
           <label for="autocomplete-input">Destination</label>
         </div>
         <div class="input-field col s12" id="waypoint-holder-1" style="display:none">
           <input id="waypoint-input-1" type="text" placeholder="Enter first waypoint">
-            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#waypoint-1-tag">
+            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#add-tag-w1">
                 <i class="material-icons">star_rate</i>
             </a>
 
@@ -95,14 +69,14 @@
         </div>
         <div class="input-field col s12" id="waypoint-holder-2" style="display:none">
           <input id="waypoint-input-2" type="text" placeholder="Enter second waypoint">
-            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#waypoint-2-tag">
+            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#add-tag-w2">
                 <i class="material-icons">star_rate</i>
             </a>
           <label for="autocomplete-input">Waypoint 2</label>
         </div>
         <div class="input-field col s12" id="waypoint-holder-3" style="display:none">
           <input id="waypoint-input-3" type="text" placeholder="Enter third waypoint">
-            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#waypoint-3-tag">
+            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#add-tag-w3">
                 <i class="material-icons">star_rate</i>
             </a>
           <label for="autocomplete-input">Waypoint 3</label>
@@ -134,15 +108,35 @@
       <script src="https://maps.googleapis.com/maps/api/js?key={{ maps_key }}&libraries=places&callback=initMap"
         async defer></script>
 <script>
-    $(document).ready(function(){
-    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-    $('.modal').modal();
-    });
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    $('.btn-star').click(function (){
 
-    function addTag(){
-        if($('#origin-input').val().length != 0){
-            var a = $('#origin-input').val();
-            //alert('Addr= ' + a + " : Label = " + $('#origin-tag #origin-label-input').val());
+        if($('#origin-input').val().length == 0){
+            <!--$('.chooseModal').modal();-->
+            var data = {{row|safe}};
+            var keys = Object.keys(data);
+            var values = Object.values(data);
+            <!--console.log(keys);-->
+
+            for(var i = 0; i < keys.length; i++){
+              $('<button>')
+                  .attr('id', keys[i])
+                  .text(keys[i])
+                  .appendTo('.chooseModal .modal-content');
+            }
+        }else{
+            $('.modal').modal();
+             $(function() {
+                $('#addtag').bind('click', function() {
+                  $.getJSON($SCRIPT_ROOT + '/addtag', {
+                    a: $('input[name="addtag_addr"]').val(),
+                    l: $('input[name="addtag_label"]').val()
+                  }, function(data) {
+                    alert(data.result);
+                  });
+                  return false;
+                });
+              });
         }
         if($('#destination-input').val().length != 0){
             var b = $('#destination-input').val();
@@ -150,6 +144,8 @@
         }
         if($('#waypoint-input-1').val().length != 0){
             var c = $('#waypoint-input-1').val();
+            var a = $('#origin-input').val();
+             var l = $('#origin-tag #origin-label-input').val();
             //alert('Addr= ' + c + " : Label = " + $('#waypoint-1-tag #waypoint-1-label-input').val());
         }
         if($('#waypoint-input-2').val().length != 0){
@@ -161,6 +157,6 @@
             //alert('Addr= ' + e + " : Label = " + $('#waypoint-3-tag #waypoint-3-label-input').val());
         }
 
-    }
+    });
 </script>
 {% endblock %} <!-- End of javascript block -->

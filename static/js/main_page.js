@@ -132,6 +132,8 @@ function initMap() {
         actual_addresses_string += "__||__";
       }
     }
+
+
     $.get('/trips', {'origin' : source_cordinates,
                      'destination' : destination_cordinates,
                      'formatted_addresses' : actual_addresses_string,

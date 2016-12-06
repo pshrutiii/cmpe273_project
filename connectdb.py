@@ -14,7 +14,7 @@ class Mysql(object):
 
     print "\n###################################"
 
-    def __init__(self, host='localhost', user='root', password='*******', database='CMPE273'): #enter the password of you mysql
+    def __init__(self, host='localhost', user='root', password='shruti2use', database='cmpe273'): #enter the password of you mysql
         self.host = host
         self.user = user
         self.password = password
@@ -148,20 +148,6 @@ def getlocationinfo(sourceaddr,login_id): # we need to provide the source addres
 
 Mysql2=Mysql()
 
-#INSERT
-#Mysql2.insert("tablename", Login_id=,first_name=,last_name=,password=,Email=)
-
-#UPDATE
-#Mysql2.update('tablename',user_ID,last_name=)
-
-#DELETE
-#Mysql2.delete('user_table',122)
-
-#SELECT
-#mysql2.select('user_table', 'Login_id = %s ', 'User_id', Login_id='chetan sidhu')
-
-
-#getlocationinfo(source address,'Login_id') enter source location and the corresponding login_id
 
 
 
