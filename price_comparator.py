@@ -33,7 +33,7 @@ def add_tag():
       l = request.args.get('l', 0, type=str)
       print "Added " + a + " -->> " + l
       Mysql2 = Mysql()
-      Mysql2.insert('tags', User_id=1, TAGaddress=a, TAGname=l)
+      Mysql2.insert('Tags', User_id=1, TAGaddress=a, TAGname=l)
       return "nothing"
 
 @app.route("/", methods =['GET', 'POST'])
@@ -47,15 +47,15 @@ def price_comparator():
             user_table_row = list(cur.fetchall())[0]
 
             tag_selection_query = \
-                    "SELECT * from tags WHERE user_id = '%s'" % str(user_table_row[0])
+                    "SELECT * from Tags WHERE user_id = '%s'" % str(user_table_row[0])
             print tag_selection_query
-            #cur.execute(tag_selection_query)
-            #allRows = {}
-            #for row in cur.fetchall():
-            #    print row[3] + " ---->>> " + row[2]
-            #    allRows[row[3]] = row[2]  # adding to dictionary
-            #dictVal = json.dumps(allRows)
-            #print "Dict val is " + str(dictVal)
+            cur.execute(tag_selection_query)
+            allRows = {}
+            for row in cur.fetchall():
+                print row[3] + " ---->>> " + row[2]
+                allRows[row[3]] = row[2]  # adding to dictionary
+            dictVal = json.dumps(allRows)
+            print "Dict val is " + str(dictVal)
             dictVal = {}
             return render_template('price_comparator.html', maps_key=JS_API_KEY, row=dictVal)
         except:

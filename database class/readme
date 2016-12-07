@@ -1,37 +1,44 @@
-before you run the program
+After connection to your Mysql database on localhost, here is setup for database creation:
 
-go to terminal...
+CREATE DATABASE CMPE273;
 
-__connect to your database on the localhost
-__create data base named CMPE273
+CREATE TABLE user_table(User_id int NOT NULL AUTO_INCREMENT, Login_id VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, PRIMARY KEY (user_id));
 
-and run the given commands to create  4 tables as it is
+CREATE TABLE user_location_table (user_loc_id int NOT NULL AUTO_INCREMENT, 
+                                  User_id int NOT NULL UNIQUE,
+                                  location_tag VARCHAR(500) NOT NULL,
+                                  address VARCHAR(500) NOT NULL,
+                                  city VARCHAR(255) NOT NULL,
+                                  state VARCHAR(255) NOT NULL,
+                                  zipcode BIGINT NOT NULL,
+                                  latitude FLOAT(20,15) NOT NULL,
+                                  longitude FLOAT(20,15),
+                                  PRIMARY KEY (user_loc_id),
+                                  FOREIGN KEY (User_id) REFERENCES user_table(User_id));
 
+CREATE TABLE LocationPriceHistory(start_location VARCHAR(255) NOT NULL,
+                                  request_time_day DATE NOT NULL,
+                                  request_time_hr TIMESTAMP NOT NULL,
+                                  uber_x_price FLOAT(10,2) NOT NULL,
+                                  uber_xl_price FLOAT(10,2) NOT NULL,
+                                  uber_x_surge FLOAT(3,2) NOT NULL,
+                                  uber_xl_surge FLOAT(3,2) NOT NULL,
+                                  lyft_line_price FLOAT(10,2) NOT NULL,
+                                  lyft_line_surge FLOAT(3,2) NOT NULL,
+                                  lyft_price FLOAT(10,2) NOT NULL,
+                                  lyft_surge FLOAT(3,2) NOT NULL);
 
-1.
+CREATE TABLE UserAppUsageHistory (User_id int NOT NULL,
+                                  start_address VARCHAR(500) NOT NULL,
+                                  destination_address VARCHAR(500) NOT NULL,
+                                  number_of_waypoints int NOT NULL,
+                                  request_day date NOT NULL,
+                                  request_time timestamp NOT NULL,
+                                  FOREIGN KEY (User_id) REFERENCES user_table(User_id));
 
-Create table user_table(User_id int NOT NULL AUTO_INCREMENT,Login_id VARCHAR(255) NOT NULL UNIQUE,
-first_name VARCHAR(255) NOT NULL,last_name VARCHAR(255) NOT NULL,password VARCHAR(255) NOT NULL,Email
- VARCHAR(255) NOT NULL UNIQUE ,PRIMARY KEY (user_id));
-
-2.Create table user_location_table (user_loc_id  int NOT NULL AUTO_INCREMENT, User_id int NOT NULL UNIQUE,
- location_tag VARCHAR(500) NOT NULL, address VARCHAR(500) NOT NULL, city VARCHAR(255) NOT NULL, state VARCHAR(255) NOT NULL,
-  zipcode BIGINT NOT NULL , latitude FLOAT(20,15) NOT NULL, longitude FLOAT(20,15) , PRIMARY KEY (user_loc_id),FOREIGN KEY
-  (User_id)   REFERENCES user_table(User_id));
-
-
-3.create table LocationPriceHistory(start_location VARCHAR(255) NOT NULL,request_time_day DATE NOT NULL,
-request_time_hr TIMESTAMP NOT NULL, uber_x_price FLOAT(10,2) NOT NULL,uber_xl_price FLOAT(10,2) NOT
-NULL,uber_x_surge FLOAT(3,2) NOT NULL,uber_xl_surge FLOAT(3,2) NOT NULL, lyft_line_price FLOAT(10,2) NOT
- NULL,lyft_line_surge FLOAT(3,2) NOT NULL,lyft_price FLOAT(10,2) NOT NULL,lyft_surge FLOAT(3,2) NOT NULL);
-
-
-4.CREATE TABLE UserAppUsageHistory (User_id int NOT NULL ,start_address VARCHAR(500) NOT NULL,destination_address
- VARCHAR(500) NOT NULL,number_of_waypoints int NOT NULL,request_day date NOT NULL,request_time timestamp
- NOT NULL,FOREIGN KEY (User_id)   REFERENCES user_table(User_id));
-
--5.CREATE TABLE Tags (id int NOT NULL AUTO_INCREMENT,User_id int NOT NULL ,TAGaddress VARCHAR(500) NOT NULL,TAGname
- - VARCHAR(500) NOT NULL,PRIMARY KEY (id),FOREIGN KEY (User_id) REFERENCES user_table(User_id));
-
-
-***** Now enter your Mysql password in the program******
+CREATE TABLE Tags (id int NOT NULL AUTO_INCREMENT,
+                   User_id int NOT NULL,
+                   TAGaddress VARCHAR(500) NOT NULL,
+                   TAGname VARCHAR(500) NOT NULL,
+                   PRIMARY KEY (id),
+                   FOREIGN KEY (User_id) REFERENCES user_table(User_id));
