@@ -16,41 +16,31 @@
 
 
     }
-
-
-
-
     #origin-input, #destination-input, #waypoint-input-1, #waypoint-input-2, #waypoint-input-3{
-    width: 90%;
-  }
-  #tag{
-     width: 30%;
- }
- #tag .modal-content{
- padding-bottom: 0px;
- }
- #tag .modal-footer{
-     font-size: small;
- }
-#tag .btn-flat{
-     color: red;
- }
-.btn-star:hover{
-      color: #F5D04C;
-  }
-  .btn-star{
-
-  }
-  #origin-input{
-
-  }
-  .input-field{
+      width: 90%;
+    }
+    #tag{
+       width: 30%;
+    }
+    #tag .modal-content{
+      padding-bottom: 0px;
+    }
+    #tag .modal-footer{
+       font-size: small;
+    }
+    #tag .btn-flat{
+       color: red;
+    }
+    .btn-star:hover{
+        color: #F5D04C;
+    }
+    .input-field{
         display: inline-block;
-
-  }
-
-
-
+    }
+    .btn-star{
+      color:#26a69a;
+    }
+    .material-icons{width: 25px;}
 
   </style>
   {% endblock %}
@@ -60,31 +50,21 @@
 
 <!-- Modal Structure -->
   <div id="add-tag-s" class="modal">
-    <div class="modal-content" >
-      <p id="para">Add a Label</p>
-
-      <input id="add-tag-input" type="text" name="addtag_label" placeholder="Enter label">
+    <div class="modal-content" id="modal-content-s">
+      <p id="para-s">Add a Label</p>
+      <input id="add-tag-input-s" type="text" name="s_label" placeholder="Enter label">
     </div>
     <div class="modal-footer">
-      <a class=" modal-action modal-close waves-effect waves-green btn-flat" id="addtag">Add</a>
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat" id="addtag-s" >Add</a>
     </div>
   </div>
 
- <!--<div id="choose-tag-s" class="chooseModal">-->
-    <!--<div class="modal-content">-->
-      <!--<p>Choose a Tag</p>-->
-      <!--<input id="choose-tag-input" type="text" name="addtag_label" placeholder="Enter label">-->
-    <!--</div>-->
-    <!--<div class="modal-footer">-->
-      <!--&lt;!&ndash;<a class=" modal-action modal-close waves-effect waves-green btn-flat" id="addtag2">Add</a>&ndash;&gt;-->
-    <!--</div>-->
-  <!--</div>-->
 
     <div class="row" style="height:100%; width=100%">
       <div class="col s12 m3 l3">
         <div class="input-field col s12">
-          <input id="origin-input" name="addtag_addr" type="text" placeholder="Enter an origin location">
-            <a class="btn-star tooltipped" data-position="right" onclick="starclick()" data-tooltip="Save" href="#add-tag-s">
+          <input id="origin-input" name="s_addr" type="text" placeholder="Enter an origin location">
+            <a class="btn-star tooltipped"  data-position="right" onclick="starclick()" data-tooltip="Save" href="#add-tag-s">
             <i class="material-icons">star_rate</i>
             </a>
           <label for="autocomplete-input">Source</label>
@@ -125,13 +105,6 @@
             <i class="material-icons">add</i>
           </a>
         </div>
-
-
-
-
-
-
-
         <div class="input-field col s12">
           <!--<button class="waves-effect waves-light btn" onclick="Function()" >MINIMUM PRICE</button>-->
           <form action="#">
@@ -148,8 +121,6 @@
           <br><br>
           <button class="waves-effect waves-light btn"  id="compare_prices_button">COMPARE</button>
           <script type="text/javascript">
-
-
             document.getElementById("test2").checked = true;
             function Function(){
 
@@ -160,37 +131,55 @@
             }
 
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-        function starclick(){
+            function starclick(){
+
                 if($('#origin-input').val().length == 0){
-                document.getElementById('para').innerHTML="SELECT TAG";
-                document.getElementById('add-tag-input').style.visibility = 'hidden';
-
-
+                    var child = document.getElementById('add-tag-input-s');
+                    document.getElementById('para-s').innerHTML="SELECT TAG";
+                    child.parentNode.removeChild(child);
+                    document.getElementById('addtag-s').style.visibility = 'hidden';
                     $('.modal').modal();
                     var data = {{row|safe}};
                     var keys = Object.keys(data);
                     var values = Object.values(data);
                     <!--console.log(keys);-->
                     for(var i = 0; i < keys.length; i++){
-                      $('<button>')
-                          .attr('id', keys[i])
-                          .text(keys[i])
-                          .appendTo('.modal .modal-content');
-                    }
-            }else{
-                <!--$('.modal').modal();-->
-                 $(function() {
-                    $('#addtag').bind('click', function() {
-                      $.getJSON($SCRIPT_ROOT + '/addtag', {
-                        a: $('input[name="addtag_addr"]').val(),
-                        l: $('input[name="addtag_label"]').val()
-                      }, function(data) {
-                        alert(data.result);
+                      $('<a class="waves-effect waves-light btn" style="margin:0 10px 10px 0 ;background-color: #F44336;">')
+                        .attr('id', keys[i])
+                        .attr('name', values[i])
+                        .text(keys[i])
+                        .appendTo('.modal #modal-content-s');
+                      var button = "#" + keys[i];
+                      $(button).click(function() {
+                        <!--console.log(this.id + " <==>" +  this.name);-->
+                        $('#origin-input').val(this.name);
                       });
-                      return false;
-                    });
-                  });
-            }
+                    }
+
+                }else{
+                    $('.modal').modal();
+                    var element = document.getElementById('modal-content-s');
+                    document.getElementById('para-s').innerHTML="Yo!";
+                    while(element.firstChild){
+                        element.removeChild(element.firstChild)
+                    }
+                    var child2 = document.createElement("INPUT");
+                    child2.setAttribute("id", "add-tag-input-s");
+                    child2.setAttribute("name", "s_label");
+                    element.appendChild(child2);
+                    document.getElementById('addtag-s').style.visibility = 'visible';
+                     $(function() {
+                        $('#addtag-s').bind('click', function() {
+                          $.getJSON($SCRIPT_ROOT + '/addtag', {
+                            a: $('input[name="s_addr"]').val(),
+                            l: $('input[name="s_label"]').val()
+                          }, function(data) {
+                            alert(data.result);
+                          });
+                          return false;
+                        });
+                      });
+                }
             if($('#destination-input').val().length != 0){
                 var b = $('#destination-input').val();
                 //alert('Addr= ' + b + " : Label = " + $('#destination-tag #destination-label-input').val());
