@@ -1,0 +1,7 @@
+Here is the list of software we need to install to make it run:
+
+ - Flask.
+ - Geocoder (https://pypi.python.org/pypi/geocoder)
+   > pip install geocoder
+ - Passlib (https://pypi.python.org/pypi/passlib)
+   > pip install passlib
