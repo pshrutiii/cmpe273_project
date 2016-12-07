@@ -13,8 +13,8 @@ app = Flask(__name__)
 
 db = MySQLdb.connect(host="localhost",  # host
                       user="root",  # username
-                      passwd="root",  # password
-                      db="CMPE273")  # db name
+                      passwd="shruti2use",  # password
+                      db="cmpe273")  # db name
 cur = db.cursor()
 
 ###################################
@@ -47,17 +47,18 @@ def price_comparator():
         try:
             global JS_API_KEY
             username = session['user']
+            print username
             cur.execute("SELECT * from user_table WHERE Login_id = '%s' " % (username))
             for row in cur.fetchall():
-                print row
+                print row[0]
 
-            cur.execute("SELECT * FROM tags WHERE User_id = 1")
+            cur.execute("SELECT * FROM tags WHERE User_id = '%s'" % (row[0]))
             allRows = {}
             for row in cur.fetchall():
                 print row[3] + " ---->>> " + row[2]
                 allRows[row[3]] = row[2]  # adding to dictionary
             dictVal = json.dumps(allRows)
-            return render_template('price_comparator.html', maps_key=JS_API_KEY,row=dictVal)
+            return render_template('price_comparator.html', maps_key=JS_API_KEY, row=dictVal)
         except:
             flash("System Error.")
     else:

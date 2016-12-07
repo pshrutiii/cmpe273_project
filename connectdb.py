@@ -14,7 +14,7 @@ class Mysql(object):
 
     print "\n###################################"
 
-    def __init__(self, host='localhost', user='root', password='root', database='CMPE273'): #enter the password of you mysql
+    def __init__(self, host='localhost', user='root', password='shruti2use', database='cmpe273'): #enter the password of you mysql
         self.host = host
         self.user = user
         self.password = password
