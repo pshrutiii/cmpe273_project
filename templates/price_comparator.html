@@ -109,27 +109,18 @@
           <!--<button class="waves-effect waves-light btn" onclick="Function()" >MINIMUM PRICE</button>-->
           <form action="#">
             <p>
-              <input name="group1" type="radio" onclick='$.post( "/postmethod", {javascript_data: "minprice"});' id="test1" />
-              <label for="test1">Minimum Price</label>
+              <input name="pricing_strategy" type="radio" id="min_price_id" value="minprice" />
+              <label for="min_price_id">Minimum Price</label>
             </p>
             <p>
-              <input name="group1" type="radio" onclick='$.post( "/postmethod", {javascript_data: "mindistance"});' id="test2" />
-              <label for="test2">Minimum Distance</label>
+              <input name="pricing_strategy" type="radio" id="min_distance_id" value="mindistance" />
+              <label for="min_distance_id">Minimum Distance</label>
             </p>
-
           </form>
           <br><br>
           <button class="waves-effect waves-light btn"  id="compare_prices_button">COMPARE</button>
           <script type="text/javascript">
-            document.getElementById("test2").checked = true;
-            function Function(){
-
-                $.post( "/postmethod", {
-                javascript_data: "data"
-                });
-
-            }
-
+            document.getElementById("min_distance_id").checked = true;
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
             function starclick(){
 

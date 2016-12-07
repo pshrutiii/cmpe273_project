@@ -25,15 +25,6 @@ MAPS_KEY = 'AIzaSyCs7YDHV5QF2QgJt8aJ1cKvFfxrIwSjsN0'
 JS_API_KEY = 'AIzaSyBYXFWRwOAPQ03YrXRDfLheFkeV2nc0sAk'
 ###################################
 
-global jsdata
-jsdata =""
-
-@app.route('/postmethod', methods = ['POST'])
-def get_post_javascript_data():
-    global jsdata
-    jsdata = request.form['javascript_data']
-    return jsdata
-
 @app.route('/addtag')
 def add_tag():
       a = request.args.get('a', 0, type=str)
@@ -562,7 +553,6 @@ def calculate_min_price_metrics(lyft, uber, waypoints, origin_lat, origin_lng,
 @app.route("/trips")
 def trips():
   if g.user:
-      print "Mode selected is " + str(jsdata)
       origin = request.args['origin']
       origin_lat_long_list= origin.split(',')
       origin_lat =  origin_lat_long_list[0]
@@ -615,9 +605,8 @@ def trips():
         values['cost'] = round(min_cost, 2)
         values['total_time'] = round(total_time, 1)
         result_metrics[company] = values
-      # print("Result : ",result_metrics) #avdeep final things to print like cost
 
-      if(jsdata == "minprice"):
+      if(request.args['price_mode'] == "minprice"):
         waypoint_count = len(waypoints.split("|"))
         if waypoint_count > 1:
             result_metrics = \

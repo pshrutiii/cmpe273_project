@@ -139,6 +139,7 @@ function initMap() {
     $.get('/trips', {'origin' : source_cordinates,
                      'destination' : destination_cordinates,
                      'formatted_addresses' : actual_addresses_string,
+                     'price_mode' : document.querySelector('input[name="pricing_strategy"]:checked').value,
                      'waypoints' : waypoint_string,
                      })
     .done(function(response) {
