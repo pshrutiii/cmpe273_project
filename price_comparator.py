@@ -1,15 +1,15 @@
-from flask import render_template,redirect,request,url_for,g, session,flash
-from flask import Flask
-from connectdb import *
-from wtforms import Form,TextField,PasswordField,validators
-from passlib.hash import sha256_crypt
+import MySQLdb
 import gc
+
+from connectdb import *
 from cost_calculator import LyftCalculator, UberCalculator
 from direction_finder import find_direction
-import MySQLdb
+from flask import render_template,redirect,request,url_for,g, session,flash
+from flask import Flask
+from passlib.hash import sha256_crypt
+from wtforms import Form,TextField,PasswordField,validators
 
 app = Flask(__name__)
-
 
 db = MySQLdb.connect(host="localhost",  # host
                       user="root",  # username
@@ -23,7 +23,6 @@ MAPS_KEY = 'AIzaSyCs7YDHV5QF2QgJt8aJ1cKvFfxrIwSjsN0'
 JS_API_KEY = 'AIzaSyBYXFWRwOAPQ03YrXRDfLheFkeV2nc0sAk'
 ###################################
 
-
 global jsdata
 jsdata =""
 
@@ -33,9 +32,6 @@ def get_post_javascript_data():
     jsdata = request.form['javascript_data']
     return jsdata
 
-
-
-
 @app.route('/addtag')
 def add_tag():
       a = request.args.get('a', 0, type=str)
@@ -44,7 +40,6 @@ def add_tag():
       Mysql2 = Mysql()
       Mysql2.insert('tags', User_id=1, TAGaddress=a, TAGname=l)
       return "nothing"
-
 
 @app.route("/", methods =['GET', 'POST'])
 def price_comparator():
@@ -64,7 +59,7 @@ def price_comparator():
             dictVal = json.dumps(allRows)
             return render_template('price_comparator.html', maps_key=JS_API_KEY,row=dictVal)
         except:
-            flash("AUNI E NAI EH ERROR")
+            flash("System Error.")
     else:
         flash("YOU NEED TO LOGIN")
         return redirect(url_for('login_page'))
@@ -79,25 +74,21 @@ def logout():
     print "logout"
 
 
-
 @app.route('/login', methods=["GET", "POST"])
 def login_page():
     error = ''
     try:
-
         if request.method == "POST":
             attempted_username = request.form['username']
             attempted_password = request.form['password']
-
 
             Mysql2 = Mysql()
 
             a = Mysql2.select('user_table', 'login_id = %s ', 'login_id', login_id=attempted_username)
 
-            if a==None:
+            if a == None:
                 flash("Username Does not exist")
             else:
-
                 x = Mysql2.select('user_table', 'login_id = %s ', 'login_id', login_id=attempted_username)
                 y = Mysql2.select('user_table', 'login_id = %s ', 'password', login_id=x)
 
@@ -107,7 +98,6 @@ def login_page():
 
                     return redirect(url_for('price_comparator'))
 
-
                 else:
                     flash("Invalid Password. Try Again.")
         return render_template("login.html", error=error)
@@ -115,14 +105,11 @@ def login_page():
     except Exception:
         return render_template("login.html", error=error)
 
-
-
 @app.before_request
 def before_request():
     g.user = None
     if 'user' in session:
         g.user = session['user']
-
 
 class RegistrationForm(Form):
     username = TextField('Username', [validators.Length(min=4, max=20)])
@@ -137,69 +124,49 @@ class RegistrationForm(Form):
 def register_page():
     try:
         form = RegistrationForm(request.form)
-        print "resister ch aa gya"
 
         if request.method == "POST" and form.validate():
-            print "if ch aa gya"
             username = form.username.data
             password = sha256_crypt.encrypt((str(form.password.data)))
 
 
             Mysql2 = Mysql()
             x = Mysql2.select('user_table', 'login_id = %s ', 'password', login_id=username)
-            print "yoooo"
-
-
 
             try:
                 if int(len(x)) > 0:
                     flash("username already taken")
             except:
-
                  if(Mysql2.insert("user_table", login_id=username, password=password)):
                     gc.collect()
                  
                  session['user']=username
-
                  return redirect(url_for('price_comparator'))
 
-
         return render_template("register.html", form=form )
-
 
     except Exception as e:
         return (str(e))
 
-
-
-
-
 @app.route("/trips")
 def trips():
-
-
   if g.user:
-
       print jsdata
       origin = request.args['origin']
       origin_lat_long_list= origin.split(',')
       origin_lat =  origin_lat_long_list[0]
       origin_lng =  origin_lat_long_list[1]
 
-
       destination = request.args['destination']
       destination_lat_long_list= destination.split(',')
       destination_lat = destination_lat_long_list[0]
       destination_lng = destination_lat_long_list[1]
 
-
-
-
       waypoints = request.args['waypoints']
-
 
       formatted_addresses = request.args['formatted_addresses'].split("__||__")
       print formatted_addresses
+
       lyft = LyftCalculator()
       uber = UberCalculator()
       #####################################################################################
@@ -209,13 +176,11 @@ def trips():
       if (all_way_points_in_list[0]==""):
           all_way_points_in_list.pop(0)
 
-
       if (len(all_way_points_in_list) == 1):
         waypoint1 = all_way_points_in_list[0]
         waypoint1 = waypoint1.split(',')
         waypoint1_lat = waypoint1[0]
         waypoint1_lng = waypoint1[1]
-
 
       elif (len(all_way_points_in_list) == 2):
          waypoint1 = all_way_points_in_list[0]
@@ -277,8 +242,7 @@ def trips():
 
                   result1[company] = values
 
-    # origin -> waypoint1 -> destination
-
+      # origin -> waypoint1 -> destination
       if (len(all_way_points_in_list) == 1):
           result1 = {}
           lyft_list=[]
@@ -508,9 +472,7 @@ def trips():
           print("Result2 : ", result2)
 
 
-
           # origin -> waypoint2 -> waypoint1 -> waypoint3 -> destination
-
           result3 = {}
           lyft_list3 = []
           uber_list3 = []
@@ -553,8 +515,6 @@ def trips():
                   values['cost'] = round(cost3, 2)
                   result3[company] = values
           print("Result3 : ", result3)
-
-
 
           # origin -> waypoint2 -> waypoint3 -> waypoint1 -> destination
           result4 = {}
