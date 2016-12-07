@@ -14,20 +14,18 @@ class Mysql(object):
 
     print "\n###################################"
 
-    def __init__(self, host='localhost', user='root', password='shruti2use', database='cmpe273'): #enter the password of you mysql
+    def __init__(self, host='localhost', user='root', password='root', database='CMPE273'): #enter the password of you mysql
         self.host = host
         self.user = user
         self.password = password
         self.database = database
 
 
-    #Open connection with database
+    # Open connection with database
     def open(self):
         try:
             print 'Checking MySQL connection...'
-
             self.db = MySQLdb.connect(self.host, self.user, self.password, self.database)
-
             self.cursor = self.db.cursor()
             print 'Connection OK, proceeding.'
         except MySQLdb.Error as error:
@@ -75,11 +73,10 @@ class Mysql(object):
                 query += "`" + key + "`"
                 if i < l:
                     query += ","
-            query += 'FROM %s' % table
+            query += ' FROM %s' % table
             # where
             if where:
                 query += " WHERE %s" % where
-
 
             self.open()
             self.cursor.execute(query, values)
@@ -147,8 +144,4 @@ def getlocationinfo(sourceaddr,login_id): # we need to provide the source addres
     mysql3.insert("user_location_table",User_id=forkey,location_tag='N',address=sourceaddr,city=city,state=state,zipcode=postaladdr,latitude=lat,longitude=long)
 
 Mysql2=Mysql()
-
-
-
-
 

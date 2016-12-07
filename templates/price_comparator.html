@@ -133,7 +133,7 @@
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
             function starclick(){
 
-                if($('#origin-input').val().length == 0){
+                if ($('#origin-input').val().length == 0){
                     var child = document.getElementById('add-tag-input-s');
                     document.getElementById('para-s').innerHTML="SELECT TAG";
                     child.parentNode.removeChild(child);
@@ -156,7 +156,7 @@
                       });
                     }
 
-                }else{
+                } else {
                     $('.modal').modal();
                     var element = document.getElementById('modal-content-s');
                     document.getElementById('para-s').innerHTML="Yo!";
