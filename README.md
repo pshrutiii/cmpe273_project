@@ -1,6 +1,20 @@
 # cmpe273_project
 Repository for group project related to CMPE273.
 
+Check contributers.txt for individual contributions.
+
+## How to run application
+
+Refer requirements.txt for dependencies.
+
+Make sure all the required softwares are installed, MySql is running on the machine and all the tables are created.
+
+```sh
+python price_comparator.py
+```
+
+Open http://localhost:5000
+
 ## Link to the proposal Doc:
 
 https://docs.google.com/document/d/1Dv45fS2HMaT3BaW8PK_gSF6a1j6jddj-Hg97TcsTi7U/edit#
