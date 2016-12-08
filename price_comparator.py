@@ -29,18 +29,22 @@ JS_API_KEY = 'AIzaSyBYXFWRwOAPQ03YrXRDfLheFkeV2nc0sAk'
 
 @app.route('/addtag')
 def add_tag():
-      a = request.args.get('a', 0, type=str)
+      a = request.args.get('a', 0, type=str)                                                     #COPY THIS
       l = request.args.get('l', 0, type=str)
-      print "Added " + a + " -->> " + l
+      username = session['user']
+      query_results = \
+          cur.execute("SELECT * from user_table WHERE Login_id = '%s' " % (username))
+      user_table_row = list(cur.fetchall())[0]
+      print "Added " + a + " -->> " + l + "to DB for user_id = " + str(user_table_row[0])
       Mysql2 = Mysql()
-      Mysql2.insert('Tags', User_id=1, TAGaddress=a, TAGname=l)
+      Mysql2.insert('Tags', User_id=user_table_row[0], TAGaddress=a, TAGname=l)
       return "nothing"
 
 @app.route("/", methods =['GET', 'POST'])
 def price_comparator():
     if g.user:
         try:
-            global JS_API_KEY
+            global JS_API_KEY                                                                       #COPY THIS
             username = session['user']
             query_results = \
                     cur.execute("SELECT * from user_table WHERE Login_id = '%s' " % (username))
@@ -48,15 +52,14 @@ def price_comparator():
 
             tag_selection_query = \
                     "SELECT * from Tags WHERE user_id = '%s'" % str(user_table_row[0])
-            print tag_selection_query
+            # print tag_selection_query
             cur.execute(tag_selection_query)
             allRows = {}
             for row in cur.fetchall():
-                print row[3] + " ---->>> " + row[2]
+                # print row[3] + " -->>> " + row[2]
                 allRows[row[3]] = row[2]  # adding to dictionary
             dictVal = json.dumps(allRows)
             print "Dict val is " + str(dictVal)
-            dictVal = {}
             return render_template('price_comparator.html', maps_key=JS_API_KEY, row=dictVal)
         except:
             flash("System Error.")
@@ -95,7 +98,7 @@ def login_page():
                             'password', login_id=login_id_selected[0])
 
                 if attempted_username == login_id_selected[0] and \
-                    sha256_crypt.verify(attempted_password, selected_password[0]):
+                        sha256_crypt.verify(attempted_password, selected_password[0]):
                     session['user'] = request.form['username']
                     return redirect(url_for('price_comparator'))
                 else:

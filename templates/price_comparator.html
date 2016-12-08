@@ -48,10 +48,9 @@
   {% block mainbody %}
     {{ super() }}
 
-<!-- Modal Structure -->
+<!-- Modal Structure -->                                                                          <!--COPY THIS-->
   <div id="add-tag-s" class="modal">
     <div class="modal-content" id="modal-content-s">
-      <p id="para-s">Add a Label</p>
       <input id="add-tag-input-s" type="text" name="s_label" placeholder="Enter label">
     </div>
     <div class="modal-footer">
@@ -59,42 +58,77 @@
     </div>
   </div>
 
+  <div id="add-tag-d" class="modal">
+    <div class="modal-content" id="modal-content-d">
+      <input id="add-tag-input-d" type="text" name="d_label" placeholder="Enter label">
+    </div>
+    <div class="modal-footer">
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat" id="addtag-d" >Add</a>
+    </div>
+  </div>
+
+  <div id="add-tag-w1" class="modal">
+    <div class="modal-content" id="modal-content-w1">
+      <input id="add-tag-input-w1" type="text" name="w1_label" placeholder="Enter label">
+    </div>
+    <div class="modal-footer">
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat" id="addtag-w1" >Add</a>
+    </div>
+  </div>
+
+  <div id="add-tag-w2" class="modal">
+    <div class="modal-content" id="modal-content-w2">
+      <input id="add-tag-input-w2" type="text" name="w2_label" placeholder="Enter label">
+    </div>
+    <div class="modal-footer">
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat" id="addtag-w2" >Add</a>
+    </div>
+  </div>
+
+  <div id="add-tag-w3" class="modal">
+    <div class="modal-content" id="modal-content-w3">
+      <input id="add-tag-input-w3" type="text" name="w3_label" placeholder="Enter label">
+    </div>
+    <div class="modal-footer">
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat" id="addtag-w3" >Add</a>
+    </div>
+  </div>
 
     <div class="row" style="height:100%; width=100%">
       <div class="col s12 m3 l3">
         <div class="input-field col s12">
           <input id="origin-input" name="s_addr" type="text" placeholder="Enter an origin location">
-            <a class="btn-star tooltipped"  data-position="right" onclick="starclick()" data-tooltip="Save" href="#add-tag-s">
+            <a class="btn-star tooltipped"  data-position="right" onclick="session_starclick()" data-tooltip="Save" href="#add-tag-s">
             <i class="material-icons">star_rate</i>
             </a>
           <label for="autocomplete-input">Source</label>
 
         </div>
         <div class="input-field col s12">
-          <input id="destination-input" type="text" placeholder="Enter a destination location">
-            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#add-tag-d">
+          <input id="destination-input" name="d_addr" type="text" placeholder="Enter a destination location">
+            <a class="btn-star tooltipped" data-position="right" onclick="destination_starclick()" data-tooltip="Save" href="#add-tag-d">
                 <i class="material-icons">star_rate</i>
             </a>
           <label for="autocomplete-input">Destination</label>
         </div>
         <div class="input-field col s12" id="waypoint-holder-1" style="display:none">
-          <input id="waypoint-input-1" type="text" placeholder="Enter first waypoint">
-            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#add-tag-w1">
+          <input id="waypoint-input-1" name="w1_addr" type="text" placeholder="Enter first waypoint">
+            <a class="btn-star tooltipped" data-position="right" onclick="waypoint1_starclick()" data-tooltip="Save" href="#add-tag-w1">
                 <i class="material-icons">star_rate</i>
             </a>
 
           <label for="autocomplete-input">Waypoint 1</label>
         </div>
         <div class="input-field col s12" id="waypoint-holder-2" style="display:none">
-          <input id="waypoint-input-2" type="text" placeholder="Enter second waypoint">
-            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#add-tag-w2">
+          <input id="waypoint-input-2" name="w2_addr" type="text" placeholder="Enter second waypoint">
+            <a class="btn-star tooltipped" data-position="right" onclick="waypoint2_starclick()" data-tooltip="Save" href="#add-tag-w2">
                 <i class="material-icons">star_rate</i>
             </a>
           <label for="autocomplete-input">Waypoint 2</label>
         </div>
         <div class="input-field col s12" id="waypoint-holder-3" style="display:none">
-          <input id="waypoint-input-3" type="text" placeholder="Enter third waypoint">
-            <a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#add-tag-w3">
+          <input id="waypoint-input-3" name="w3_addr" type="text" placeholder="Enter third waypoint">
+            <a class="btn-star tooltipped" data-position="right" onclick="waypoint3_starclick()" data-tooltip="Save" href="#add-tag-w3">
                 <i class="material-icons">star_rate</i>
             </a>
           <label for="autocomplete-input">Waypoint 3</label>
@@ -122,38 +156,20 @@
           <script type="text/javascript">
             document.getElementById("min_distance_id").checked = true;
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-            function starclick(){
 
-                if ($('#origin-input').val().length == 0){
-                    var child = document.getElementById('add-tag-input-s');
-                    document.getElementById('para-s').innerHTML="SELECT TAG";
-                    child.parentNode.removeChild(child);
-                    document.getElementById('addtag-s').style.visibility = 'hidden';
-                    $('.modal').modal();
-                    var data = {{row|safe}};
-                    var keys = Object.keys(data);
-                    var values = Object.values(data);
-                    <!--console.log(keys);-->
-                    for(var i = 0; i < keys.length; i++){
-                      $('<a class="waves-effect waves-light btn" style="margin:0 10px 10px 0 ;background-color: #F44336;">')
-                        .attr('id', keys[i])
-                        .attr('name', values[i])
-                        .text(keys[i])
-                        .appendTo('.modal #modal-content-s');
-                      var button = "#" + keys[i];
-                      $(button).click(function() {
-                        <!--console.log(this.id + " <==>" +  this.name);-->
-                        $('#origin-input').val(this.name);
-                      });
-                    }
-
-                } else {
+            <!--Session STAR ONCLICK method-->                                        <!--COPY THIS-->
+            function session_starclick(){
+                <!--console.log("Current length = " + $('#origin-input').val().length);-->
+                if ($('#origin-input').val().length > 0){
                     $('.modal').modal();
                     var element = document.getElementById('modal-content-s');
-                    document.getElementById('para-s').innerHTML="Yo!";
                     while(element.firstChild){
                         element.removeChild(element.firstChild)
                     }
+                    var para = document.createElement("P");
+                    var t = document.createTextNode("ADD A LABEL");
+                    para.appendChild(t);
+                    element.appendChild(para);
                     var child2 = document.createElement("INPUT");
                     child2.setAttribute("id", "add-tag-input-s");
                     child2.setAttribute("name", "s_label");
@@ -170,26 +186,283 @@
                           return false;
                         });
                       });
+
+                } else {
+                    var element = document.getElementById('modal-content-s');
+                    while(element.firstChild){
+                        element.removeChild(element.firstChild)
+                    }
+                    var element = document.getElementById('modal-content-s');
+                    var para = document.createElement("P");
+                    var t = document.createTextNode("SELECT A LABEL");
+                    para.appendChild(t);
+                    element.appendChild(para);
+
+                    document.getElementById('addtag-s').style.visibility = 'hidden';
+                    $('.modal').modal();
+                    var data = {{row|safe}};
+                    var keys = Object.keys(data);
+                    var values = Object.values(data);
+                    console.log(keys);
+                    for(var i = 0; i < keys.length; i++){
+                      var keys_id = keys[i]+ "-s"
+                      $('<a class="waves-effect waves-light btn" style="margin:0 10px 10px 0 ;background-color: #F44336;">')
+                        .attr('id', keys_id)
+                        .attr('name', values[i])
+                        .text(keys[i])
+                        .appendTo('.modal #modal-content-s');
+                      var button = "#" + keys_id;
+                      $(button).click(function() {
+                        <!--console.log(this.id + " <==>" +  this.name);-->
+                        $('#origin-input').val(this.name);
+                      });
+                    }
                 }
-            if($('#destination-input').val().length != 0){
-                var b = $('#destination-input').val();
-                //alert('Addr= ' + b + " : Label = " + $('#destination-tag #destination-label-input').val());
             }
-            if($('#waypoint-input-1').val().length != 0){
-                var c = $('#waypoint-input-1').val();
-                var a = $('#origin-input').val();
-                 var l = $('#origin-tag #origin-label-input').val();
-                //alert('Addr= ' + c + " : Label = " + $('#waypoint-1-tag #waypoint-1-label-input').val());
+
+            <!--Destination STAR ONCLICK method-->
+            function destination_starclick(){
+              if ($('#destination-input').val().length > 0){
+                  $('.modal').modal();
+                  var element = document.getElementById('modal-content-d');
+                  while(element.firstChild){
+                      element.removeChild(element.firstChild)
+                  }
+                  var para = document.createElement("P");
+                  var t = document.createTextNode("ADD A LABEL");
+                  para.appendChild(t);
+                  element.appendChild(para);
+                  var child2 = document.createElement("INPUT");
+                  child2.setAttribute("id", "add-tag-input-d");
+                  child2.setAttribute("name", "d_label");
+                  element.appendChild(child2);
+                  document.getElementById('addtag-d').style.visibility = 'visible';
+                   $(function() {
+                      $('#addtag-d').bind('click', function() {
+                        $.getJSON($SCRIPT_ROOT + '/addtag', {
+                          a: $('input[name="d_addr"]').val(),
+                          l: $('input[name="d_label"]').val()
+                        }, function(data) {
+                          alert(data.result);
+                        });
+                        return false;
+                      });
+                    });
+              } else {
+                  var element = document.getElementById('modal-content-d');
+                  while(element.firstChild){
+                      element.removeChild(element.firstChild)
+                  }
+                  var element = document.getElementById('modal-content-d');
+                  var para = document.createElement("P");
+                  var t = document.createTextNode("SELECT A LABEL");
+                  para.appendChild(t);
+                  element.appendChild(para);
+
+                  document.getElementById('addtag-d').style.visibility = 'hidden';
+                  $('.modal').modal();
+                  var data = {{row|safe}};
+                  var keys = Object.keys(data);
+                  var values = Object.values(data);
+                  console.log(keys);
+                  for(var i = 0; i < keys.length; i++){
+                    var keys_id = keys[i]+ "-d"
+                    $('<a class="waves-effect waves-light btn" style="margin:0 10px 10px 0 ;background-color: #F44336;">')
+                      .attr('id', keys_id)
+                      .attr('name', values[i])
+                      .text(keys[i])
+                      .appendTo('.modal #modal-content-d');
+                    var button = "#" + keys_id;
+                    $(button).click(function() {
+                      <!--console.log(this.id + " <==>" +  this.name);-->
+                      $('#destination-input').val(this.name);
+                    });
+                  }
+              }
             }
-            if($('#waypoint-input-2').val().length != 0){
-                var d = $('#waypoint-input-2').val();
-                //alert('Addr= ' + d + " : Label = " + $('#waypoint-2-tag #waypoint-2-label-input').val());
+
+            <!--Waypoint-1 STAR ONCLICK method-->
+            function waypoint1_starclick(){
+              if ($('#waypoint-input-1').val().length > 0){
+                  $('.modal').modal();
+                  var element = document.getElementById('modal-content-w1');
+                  while(element.firstChild){
+                      element.removeChild(element.firstChild)
+                  }
+                  var para = document.createElement("P");
+                  var t = document.createTextNode("ADD A LABEL");
+                  para.appendChild(t);
+                  element.appendChild(para);
+                  var child2 = document.createElement("INPUT");
+                  child2.setAttribute("id", "add-tag-input-w1");
+                  child2.setAttribute("name", "w1_label");
+                  element.appendChild(child2);
+                  document.getElementById('addtag-w1').style.visibility = 'visible';
+                   $(function() {
+                      $('#addtag-w1').bind('click', function() {
+                        $.getJSON($SCRIPT_ROOT + '/addtag', {
+                          a: $('input[name="w1_addr"]').val(),
+                          l: $('input[name="w1_label"]').val()
+                        }, function(data) {
+                          alert(data.result);
+                        });
+                        return false;
+                      });
+                    });
+              } else {
+                  var element = document.getElementById('modal-content-w1');
+                  while(element.firstChild){
+                      element.removeChild(element.firstChild)
+                  }
+                  var element = document.getElementById('modal-content-w1');
+                  var para = document.createElement("P");
+                  var t = document.createTextNode("SELECT A LABEL");
+                  para.appendChild(t);
+                  element.appendChild(para);
+
+                  document.getElementById('addtag-w1').style.visibility = 'hidden';
+                  $('.modal').modal();
+                  var data = {{row|safe}};
+                  var keys = Object.keys(data);
+                  var values = Object.values(data);
+                  console.log(keys);
+                  for(var i = 0; i < keys.length; i++){
+                    var keys_id = keys[i]+ "-w1"
+                    $('<a class="waves-effect waves-light btn" style="margin:0 10px 10px 0 ;background-color: #F44336;">')
+                      .attr('id', keys_id)
+                      .attr('name', values[i])
+                      .text(keys[i])
+                      .appendTo('.modal #modal-content-w1');
+                    var button = "#" + keys_id;
+                    $(button).click(function() {
+                      <!--console.log(this.id + " <==>" +  this.name);-->
+                      $('#waypoint-input-1').val(this.name);
+                    });
+                  }
+              }
             }
-            if($('#waypoint-input-3').val().length != 0){
-                var e = $('#waypoint-input-3').val();
-                //alert('Addr= ' + e + " : Label = " + $('#waypoint-3-tag #waypoint-3-label-input').val());
+
+            <!--Waypoint-2 STAR ONCLICK method-->
+            function waypoint2_starclick(){
+              if ($('#waypoint-input-2').val().length > 0){
+                  $('.modal').modal();
+                  var element = document.getElementById('modal-content-w2');
+                  while(element.firstChild){
+                      element.removeChild(element.firstChild)
+                  }
+                  var para = document.createElement("P");
+                  var t = document.createTextNode("ADD A LABEL");
+                  para.appendChild(t);
+                  element.appendChild(para);
+                  var child2 = document.createElement("INPUT");
+                  child2.setAttribute("id", "add-tag-input-w2");
+                  child2.setAttribute("name", "w2_label");
+                  element.appendChild(child2);
+                  document.getElementById('addtag-w2').style.visibility = 'visible';
+                   $(function() {
+                      $('#addtag-w2').bind('click', function() {
+                        $.getJSON($SCRIPT_ROOT + '/addtag', {
+                          a: $('input[name="w2_addr"]').val(),
+                          l: $('input[name="w2_label"]').val()
+                        }, function(data) {
+                          alert(data.result);
+                        });
+                        return false;
+                      });
+                    });
+              } else {
+                  var element = document.getElementById('modal-content-w2');
+                  while(element.firstChild){
+                      element.removeChild(element.firstChild)
+                  }
+                  var element = document.getElementById('modal-content-w2');
+                  var para = document.createElement("P");
+                  var t = document.createTextNode("SELECT A LABEL");
+                  para.appendChild(t);
+                  element.appendChild(para);
+
+                  document.getElementById('addtag-w2').style.visibility = 'hidden';
+                  $('.modal').modal();
+                  var data = {{row|safe}};
+                  var keys = Object.keys(data);
+                  var values = Object.values(data);
+                  console.log(keys);
+                  for(var i = 0; i < keys.length; i++){
+                    var keys_id = keys[i]+ "-w2"
+                    $('<a class="waves-effect waves-light btn" style="margin:0 10px 10px 0 ;background-color: #F44336;">')
+                      .attr('id', keys_id)
+                      .attr('name', values[i])
+                      .text(keys[i])
+                      .appendTo('.modal #modal-content-w2');
+                    var button = "#" + keys_id;
+                    $(button).click(function() {
+                      <!--console.log(this.id + " <==>" +  this.name);-->
+                      $('#waypoint-input-2').val(this.name);
+                    });
+                  }
+              }
             }
-        }
+
+            <!--Waypoint-3 STAR ONCLICK method-->
+            function waypoint3_starclick(){
+              if ($('#waypoint-input-3').val().length > 0){
+                  $('.modal').modal();
+                  var element = document.getElementById('modal-content-w3');
+                  while(element.firstChild){
+                      element.removeChild(element.firstChild)
+                  }
+                  var para = document.createElement("P");
+                  var t = document.createTextNode("ADD A LABEL");
+                  para.appendChild(t);
+                  element.appendChild(para);
+                  var child2 = document.createElement("INPUT");
+                  child2.setAttribute("id", "add-tag-input-w3");
+                  child2.setAttribute("name", "w3_label");
+                  element.appendChild(child2);
+                  document.getElementById('addtag-w3').style.visibility = 'visible';
+                   $(function() {
+                      $('#addtag-w3').bind('click', function() {
+                        $.getJSON($SCRIPT_ROOT + '/addtag', {
+                          a: $('input[name="w3_addr"]').val(),
+                          l: $('input[name="w3_label"]').val()
+                        }, function(data) {
+                          alert(data.result);
+                        });
+                        return false;
+                      });
+                    });
+              } else {
+                  var element = document.getElementById('modal-content-w3');
+                  while(element.firstChild){
+                      element.removeChild(element.firstChild)
+                  }
+                  var element = document.getElementById('modal-content-w3');
+                  var para = document.createElement("P");
+                  var t = document.createTextNode("SELECT A LABEL");
+                  para.appendChild(t);
+                  element.appendChild(para);
+
+                  document.getElementById('addtag-w3').style.visibility = 'hidden';
+                  $('.modal').modal();
+                  var data = {{row|safe}};
+                  var keys = Object.keys(data);
+                  var values = Object.values(data);
+                  console.log(keys);
+                  for(var i = 0; i < keys.length; i++){
+                    var keys_id = keys[i]+ "-w3"
+                    $('<a class="waves-effect waves-light btn" style="margin:0 10px 10px 0 ;background-color: #F44336;">')
+                      .attr('id', keys_id)
+                      .attr('name', values[i])
+                      .text(keys[i])
+                      .appendTo('.modal #modal-content-w3');
+                    var button = "#" + keys_id;
+                    $(button).click(function() {
+                      <!--console.log(this.id + " <==>" +  this.name);-->
+                      $('#waypoint-input-3').val(this.name);
+                    });
+                  }
+              }
+            }
           </script>
 
         </div>
