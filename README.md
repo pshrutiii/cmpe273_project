@@ -1,6 +1,8 @@
 # cmpe273_project
 Repository for group project related to CMPE273.
 
+Check contributions.txt for individual contributions.
+
 ## Link to the proposal Doc:
 
 https://docs.google.com/document/d/1Dv45fS2HMaT3BaW8PK_gSF6a1j6jddj-Hg97TcsTi7U/edit#
