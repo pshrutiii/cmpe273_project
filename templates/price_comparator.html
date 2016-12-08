@@ -48,6 +48,57 @@
   {% block mainbody %}
     {{ super() }}
 
+<!--&lt;!&ndash; Modal Structure &ndash;&gt;-->
+  <!--<div id="add-tag-s" class="modal">-->
+    <!--<div class="modal-content" id="modal-content-s">-->
+      <!--<p id="para-s">Add a Label</p>-->
+      <!--<input id="add-tag-input-s" type="text" name="s_label" placeholder="Enter label">-->
+    <!--</div>-->
+    <!--<div class="modal-footer">-->
+      <!--<a class=" modal-action modal-close waves-effect waves-green btn-flat" id="addtag-s" >Add</a>-->
+    <!--</div>-->
+  <!--</div>-->
+
+
+    <!--<div class="row" style="height:100%; width=100%">-->
+      <!--<div class="col s12 m3 l3">-->
+        <!--<div class="input-field col s12">-->
+          <!--<input id="origin-input" name="s_addr" type="text" placeholder="Enter an origin location">-->
+            <!--<a class="btn-star tooltipped"  data-position="right" onclick="starclick()" data-tooltip="Save" href="#add-tag-s">-->
+            <!--<i class="material-icons">star_rate</i>-->
+            <!--</a>-->
+          <!--<label for="autocomplete-input">Source</label>-->
+
+        <!--</div>-->
+        <!--<div class="input-field col s12">-->
+          <!--<input id="destination-input" type="text" placeholder="Enter a destination location">-->
+            <!--<a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#add-tag-d">-->
+                <!--<i class="material-icons">star_rate</i>-->
+            <!--</a>-->
+          <!--<label for="autocomplete-input">Destination</label>-->
+        <!--</div>-->
+        <!--<div class="input-field col s12" id="waypoint-holder-1" style="display:none">-->
+          <!--<input id="waypoint-input-1" type="text" placeholder="Enter first waypoint">-->
+            <!--<a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#add-tag-w1">-->
+                <!--<i class="material-icons">star_rate</i>-->
+            <!--</a>-->
+
+          <!--<label for="autocomplete-input">Waypoint 1</label>-->
+        <!--</div>-->
+        <!--<div class="input-field col s12" id="waypoint-holder-2" style="display:none">-->
+          <!--<input id="waypoint-input-2" type="text" placeholder="Enter second waypoint">-->
+            <!--<a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#add-tag-w2">-->
+                <!--<i class="material-icons">star_rate</i>-->
+            <!--</a>-->
+          <!--<label for="autocomplete-input">Waypoint 2</label>-->
+        <!--</div>-->
+        <!--<div class="input-field col s12" id="waypoint-holder-3" style="display:none">-->
+          <!--<input id="waypoint-input-3" type="text" placeholder="Enter third waypoint">-->
+            <!--<a class="btn-star tooltipped" data-position="right" data-tooltip="Save" href="#add-tag-w3">-->
+                <!--<i class="material-icons">star_rate</i>-->
+            <!--</a>-->
+          <!--<label for="autocomplete-input">Waypoint 3</label>-->
+        <!--</div>-->
 <!-- Modal Structure -->                                                                          <!--COPY THIS-->
   <div id="add-tag-s" class="modal">
     <div class="modal-content" id="modal-content-s">
@@ -133,6 +184,9 @@
             </a>
           <label for="autocomplete-input">Waypoint 3</label>
         </div>
+
+
+
         <div class="input-field col s12" id="addwaypoint_holder">
           <a class="btn-floating btn waves-effect waves-light red tooltipped"
              data-position="right" data-tooltip="Add Another Stop" onclick="addWayPoint();">
@@ -156,8 +210,76 @@
           <script type="text/javascript">
             document.getElementById("min_distance_id").checked = true;
             $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+            <!--function starclick(){-->
 
-            <!--Session STAR ONCLICK method-->                                        <!--COPY THIS-->
+                <!--if ($('#origin-input').val().length == 0){-->
+                    <!--var child = document.getElementById('add-tag-input-s');-->
+                    <!--document.getElementById('para-s').innerHTML="SELECT TAG";-->
+                    <!--child.parentNode.removeChild(child);-->
+                    <!--document.getElementById('addtag-s').style.visibility = 'hidden';-->
+                    <!--$('.modal').modal();-->
+                    <!--var data = {{row|safe}};-->
+                    <!--var keys = Object.keys(data);-->
+                    <!--var values = Object.values(data);-->
+                    <!--&lt;!&ndash;console.log(keys);&ndash;&gt;-->
+                    <!--for(var i = 0; i < keys.length; i++){-->
+                      <!--$('<a class="waves-effect waves-light btn" style="margin:0 10px 10px 0 ;background-color: #F44336;">')-->
+                        <!--.attr('id', keys[i])-->
+                        <!--.attr('name', values[i])-->
+                        <!--.text(keys[i])-->
+                        <!--.appendTo('.modal #modal-content-s');-->
+                      <!--var button = "#" + keys[i];-->
+                      <!--$(button).click(function() {-->
+                        <!--&lt;!&ndash;console.log(this.id + " <==>" +  this.name);&ndash;&gt;-->
+                        <!--$('#origin-input').val(this.name);-->
+                      <!--});-->
+                    <!--}-->
+
+                <!--} else {-->
+                    <!--$('.modal').modal();-->
+                    <!--var element = document.getElementById('modal-content-s');-->
+                    <!--document.getElementById('para-s').innerHTML="Yo!";-->
+                    <!--while(element.firstChild){-->
+                        <!--element.removeChild(element.firstChild)-->
+                    <!--}-->
+                    <!--var child2 = document.createElement("INPUT");-->
+                    <!--child2.setAttribute("id", "add-tag-input-s");-->
+                    <!--child2.setAttribute("name", "s_label");-->
+                    <!--element.appendChild(child2);-->
+                    <!--document.getElementById('addtag-s').style.visibility = 'visible';-->
+                     <!--$(function() {-->
+                        <!--$('#addtag-s').bind('click', function() {-->
+                          <!--$.getJSON($SCRIPT_ROOT + '/addtag', {-->
+                            <!--a: $('input[name="s_addr"]').val(),-->
+                            <!--l: $('input[name="s_label"]').val()-->
+                          <!--}, function(data) {-->
+                            <!--alert(data.result);-->
+                          <!--});-->
+                          <!--return false;-->
+                        <!--});-->
+                      <!--});-->
+                <!--}-->
+            <!--if($('#destination-input').val().length != 0){-->
+                <!--var b = $('#destination-input').val();-->
+                <!--//alert('Addr= ' + b + " : Label = " + $('#destination-tag #destination-label-input').val());-->
+            <!--}-->
+            <!--if($('#waypoint-input-1').val().length != 0){-->
+                <!--var c = $('#waypoint-input-1').val();-->
+                <!--var a = $('#origin-input').val();-->
+                 <!--var l = $('#origin-tag #origin-label-input').val();-->
+                <!--//alert('Addr= ' + c + " : Label = " + $('#waypoint-1-tag #waypoint-1-label-input').val());-->
+            <!--}-->
+            <!--if($('#waypoint-input-2').val().length != 0){-->
+                <!--var d = $('#waypoint-input-2').val();-->
+                <!--//alert('Addr= ' + d + " : Label = " + $('#waypoint-2-tag #waypoint-2-label-input').val());-->
+            <!--}-->
+            <!--if($('#waypoint-input-3').val().length != 0){-->
+                <!--var e = $('#waypoint-input-3').val();-->
+                <!--//alert('Addr= ' + e + " : Label = " + $('#waypoint-3-tag #waypoint-3-label-input').val());-->
+            <!--}-->
+        <!--}-->
+
+         <!--Session STAR ONCLICK method-->                                        <!--COPY THIS-->
             function session_starclick(){
                 <!--console.log("Current length = " + $('#origin-input').val().length);-->
                 if ($('#origin-input').val().length > 0){
@@ -186,7 +308,6 @@
                           return false;
                         });
                       });
-
                 } else {
                     var element = document.getElementById('modal-content-s');
                     while(element.firstChild){
@@ -197,7 +318,6 @@
                     var t = document.createTextNode("SELECT A LABEL");
                     para.appendChild(t);
                     element.appendChild(para);
-
                     document.getElementById('addtag-s').style.visibility = 'hidden';
                     $('.modal').modal();
                     var data = {{row|safe}};
@@ -219,7 +339,6 @@
                     }
                 }
             }
-
             <!--Destination STAR ONCLICK method-->
             function destination_starclick(){
               if ($('#destination-input').val().length > 0){
@@ -258,7 +377,6 @@
                   var t = document.createTextNode("SELECT A LABEL");
                   para.appendChild(t);
                   element.appendChild(para);
-
                   document.getElementById('addtag-d').style.visibility = 'hidden';
                   $('.modal').modal();
                   var data = {{row|safe}};
@@ -280,7 +398,6 @@
                   }
               }
             }
-
             <!--Waypoint-1 STAR ONCLICK method-->
             function waypoint1_starclick(){
               if ($('#waypoint-input-1').val().length > 0){
@@ -319,7 +436,6 @@
                   var t = document.createTextNode("SELECT A LABEL");
                   para.appendChild(t);
                   element.appendChild(para);
-
                   document.getElementById('addtag-w1').style.visibility = 'hidden';
                   $('.modal').modal();
                   var data = {{row|safe}};
@@ -341,7 +457,6 @@
                   }
               }
             }
-
             <!--Waypoint-2 STAR ONCLICK method-->
             function waypoint2_starclick(){
               if ($('#waypoint-input-2').val().length > 0){
@@ -380,7 +495,6 @@
                   var t = document.createTextNode("SELECT A LABEL");
                   para.appendChild(t);
                   element.appendChild(para);
-
                   document.getElementById('addtag-w2').style.visibility = 'hidden';
                   $('.modal').modal();
                   var data = {{row|safe}};
@@ -402,7 +516,6 @@
                   }
               }
             }
-
             <!--Waypoint-3 STAR ONCLICK method-->
             function waypoint3_starclick(){
               if ($('#waypoint-input-3').val().length > 0){
@@ -441,7 +554,6 @@
                   var t = document.createTextNode("SELECT A LABEL");
                   para.appendChild(t);
                   element.appendChild(para);
-
                   document.getElementById('addtag-w3').style.visibility = 'hidden';
                   $('.modal').modal();
                   var data = {{row|safe}};

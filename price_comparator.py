@@ -19,6 +19,10 @@ db = MySQLdb.connect(host="localhost",  # host
                      db="CMPE273")  # db name
 cur = db.cursor()
 
+result1cost = 0.0
+result2cost = 0.0
+Index_Min_Cost = 0
+
 ###################################
 DB_USER_TABLE = "user_table"
 
@@ -28,30 +32,55 @@ JS_API_KEY = 'AIzaSyBYXFWRwOAPQ03YrXRDfLheFkeV2nc0sAk'
 ###################################
 
 @app.route('/addtag')
+# def add_tag():
+#       a = request.args.get('a', 0, type=str)
+#       l = request.args.get('l', 0, type=str)
+#       print "Added " + a + " -->> " + l
+#       Mysql2 = Mysql()
+#       Mysql2.insert('Tags', User_id=1, TAGaddress=a, TAGname=l)
+#       return "nothing"
 def add_tag():
-      a = request.args.get('a', 0, type=str)                                                     #COPY THIS
-      l = request.args.get('l', 0, type=str)
-      username = session['user']
-      query_results = \
-          cur.execute("SELECT * from user_table WHERE Login_id = '%s' " % (username))
-      user_table_row = list(cur.fetchall())[0]
-      print "Added " + a + " -->> " + l + "to DB for user_id = " + str(user_table_row[0])
-      Mysql2 = Mysql()
-      Mysql2.insert('Tags', User_id=user_table_row[0], TAGaddress=a, TAGname=l)
-      return "nothing"
+    a = request.args.get('a', 0, type=str)  # COPY THIS
+    l = request.args.get('l', 0, type=str)
+    username = session['user']
+    query_results = \
+        cur.execute("SELECT * from user_table WHERE Login_id = '%s' " % (username))
+    user_table_row = list(cur.fetchall())[0]
+    print "Added " + a + " -->> " + l + "to DB for user_id = " + str(user_table_row[0])
+    Mysql2 = Mysql()
+    Mysql2.insert('Tags', User_id=user_table_row[0], TAGaddress=a, TAGname=l)
+    return "nothing"
 
 @app.route("/", methods =['GET', 'POST'])
 def price_comparator():
     if g.user:
         try:
-            global JS_API_KEY                                                                       #COPY THIS
+            # global JS_API_KEY
+            # username = session['user']
+            # query_results = \
+            #         cur.execute("SELECT * from user_table WHERE Login_id = '%s' " % (username))
+            # user_table_row = list(cur.fetchall())[0]
+            #
+            # tag_selection_query = \
+            #         "SELECT * from Tags WHERE user_id = '%s'" % str(user_table_row[0])
+            # print tag_selection_query
+            # cur.execute(tag_selection_query)
+            # allRows = {}
+            # for row in cur.fetchall():
+            #     print row[3] + " ---->>> " + row[2]
+            #     allRows[row[3]] = row[2]  # adding to dictionary
+            # dictVal = json.dumps(allRows)
+            # print "Dict val is " + str(dictVal)
+            # dictVal = {}
+            # return render_template('price_comparator.html', maps_key=JS_API_KEY, row=dictVal)
+            global JS_API_KEY  # COPY THIS
             username = session['user']
             query_results = \
-                    cur.execute("SELECT * from user_table WHERE Login_id = '%s' " % (username))
+                cur.execute("SELECT * from user_table WHERE Login_id = '%s' " % (username))
             user_table_row = list(cur.fetchall())[0]
 
             tag_selection_query = \
-                    "SELECT * from Tags WHERE user_id = '%s'" % str(user_table_row[0])
+                "SELECT * from Tags WHERE user_id = '%s'" % str(user_table_row[0])
             # print tag_selection_query
             cur.execute(tag_selection_query)
             allRows = {}
@@ -74,7 +103,7 @@ def logout():
     print "session deleted"
     flash("YOU ARE LOGGED OUT")
     return render_template("login.html")
-    print "logout"
+
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -98,7 +127,7 @@ def login_page():
                             'password', login_id=login_id_selected[0])
 
                 if attempted_username == login_id_selected[0] and \
-                        sha256_crypt.verify(attempted_password, selected_password[0]):
+                    sha256_crypt.verify(attempted_password, selected_password[0]):
                     session['user'] = request.form['username']
                     return redirect(url_for('price_comparator'))
                 else:
@@ -143,7 +172,7 @@ def register_page():
                     gc.collect()
                  
                  session['user']=username
-                 return redirect(url_for('price_comparator'))
+                 return render_template("price_comparator.html", form=form )
 
         return render_template("register.html", form=form )
 
@@ -327,7 +356,9 @@ def calculate_min_price_metrics(lyft, uber, waypoints, origin_lat, origin_lng,
         print("Result6 : ", result6)
 
     if(len(all_way_points_in_list) == 2):
+        global result1cost
         result1cost = result1['Lyft Plus']['cost']
+        global result2cost
         result2cost = result2['Lyft Plus']['cost']
 
         if result1cost < result2cost:
@@ -342,7 +373,8 @@ def calculate_min_price_metrics(lyft, uber, waypoints, origin_lat, origin_lng,
                    result4['Lyft Plus']['cost'],
                    result5['Lyft Plus']['cost'],
                    result6['Lyft Plus']['cost']]
-
+        global Index_Min_Cost
+        Index_Min_Cost = results.index(min(results))
         final_result_metrics = eval("result" + str(1 + results.index(min(results))))
     return final_result_metrics
 
@@ -360,9 +392,11 @@ def trips():
       destination_lng = destination_lat_long_list[1]
 
       waypoints = request.args['waypoints']
+      all_way_points_in_list = waypoints.split('|')
+      # print "DONNNNNNNNN : ",all_way_points_in_list
 
       formatted_addresses = request.args['formatted_addresses'].split("__||__")
-      print formatted_addresses
+      # print len(formatted_addresses)
 
       lyft = LyftCalculator()
       uber = UberCalculator()
@@ -370,10 +404,70 @@ def trips():
       #####################################################################################
       waypoint_count = len(waypoints.split("|"))
       calculated_route = find_direction(MAPS_KEY, origin, destination, waypoints).json()
+
       if request.args['price_mode'] == "minprice" and waypoint_count > 1:
         result_metrics = \
             calculate_min_price_metrics(lyft, uber, waypoints, origin_lat,
                         origin_lng, destination_lat, destination_lng)
+        minprice_route=[]
+
+
+        if len(formatted_addresses) == 3:
+            minprice_route.append("A) " + formatted_addresses[0])
+            minprice_route.append("B) " + formatted_addresses[1])
+
+        elif (len(formatted_addresses) == 5):
+            if (result1cost > result2cost):
+                minprice_route.append("A) " + formatted_addresses[0])
+                minprice_route.append("B) " + formatted_addresses[2])
+                minprice_route.append("C)" + formatted_addresses[3])
+                minprice_route.append("D) " + formatted_addresses[1])
+
+            elif (result2cost > result1cost):
+                minprice_route.append("A) " + formatted_addresses[0])
+                minprice_route.append("B) " + formatted_addresses[3])
+                minprice_route.append("C) " + formatted_addresses[2])
+                minprice_route.append("D) " + formatted_addresses[1])
+
+        elif(len(formatted_addresses) == 6):
+            if(Index_Min_Cost == 0):
+                minprice_route.append("A) " + formatted_addresses[0])
+                minprice_route.append("B) " + formatted_addresses[2])
+                minprice_route.append("C) " + formatted_addresses[3])
+                minprice_route.append("D) " + formatted_addresses[4])
+                minprice_route.append("E) " + formatted_addresses[1])
+            elif(Index_Min_Cost == 1):
+                minprice_route.append("A) " + formatted_addresses[0])
+                minprice_route.append("B) " + formatted_addresses[2])
+                minprice_route.append("C) " + formatted_addresses[4])
+                minprice_route.append("D) " + formatted_addresses[3])
+                minprice_route.append("E) " + formatted_addresses[1])
+            elif (Index_Min_Cost == 2):
+                minprice_route.append("A) " + formatted_addresses[0])
+                minprice_route.append("B) " + formatted_addresses[3])
+                minprice_route.append("C) " + formatted_addresses[2])
+                minprice_route.append("D) " + formatted_addresses[4])
+                minprice_route.append("E) " + formatted_addresses[1])
+            elif (Index_Min_Cost == 3):
+                minprice_route.append("A) " + formatted_addresses[0])
+                minprice_route.append("B) " + formatted_addresses[3])
+                minprice_route.append("C) " + formatted_addresses[4])
+                minprice_route.append("D) " + formatted_addresses[2])
+                minprice_route.append("E) " + formatted_addresses[1])
+            elif (Index_Min_Cost == 4):
+                minprice_route.append("A) " + formatted_addresses[0])
+                minprice_route.append("B) " + formatted_addresses[4])
+                minprice_route.append("C) " + formatted_addresses[3])
+                minprice_route.append("D) " + formatted_addresses[2])
+                minprice_route.append("E) " + formatted_addresses[1])
+            elif (Index_Min_Cost == 5):
+                minprice_route.append("A) " + formatted_addresses[0])
+                minprice_route.append("B) " + formatted_addresses[4])
+                minprice_route.append("C) " + formatted_addresses[2])
+                minprice_route.append("D) " + formatted_addresses[3])
+                minprice_route.append("E) " + formatted_addresses[1])
+
+
       else: 
         lyft_metrics = []
         uber_metrics = []
@@ -392,13 +486,27 @@ def trips():
                                                 price_list[len(price_list)/2 : len(price_list)])
         print("Min Distance Result: ", result_metrics)
 
-      route = []
-      route.append("A) " + formatted_addresses[0])
+
+
+
+      mindist_route =[]
+      mindist_route.append("A) " + formatted_addresses[0])
       path_index = 'B'
       for waypoint_index in calculated_route['routes'][0]['waypoint_order']:
-        route.append(path_index + ") " + formatted_addresses[2+waypoint_index])
+        mindist_route.append(path_index + ") " + formatted_addresses[2+waypoint_index])
         path_index = chr(ord(path_index) + 1)
-      route.append(path_index + ") " + formatted_addresses[1])
+      mindist_route.append(path_index + ") " + formatted_addresses[1])
+      print "route : ",type(mindist_route)
+
+
+      route= []
+      if request.args['price_mode'] == "minprice" and waypoint_count > 1:
+          route = minprice_route
+
+      else:
+          route = mindist_route
+
+
 
       return render_template('analysis.html', result=result_metrics, route=route)
   else:
