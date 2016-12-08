@@ -7,4 +7,14 @@ Avdeep Singh
 Gurchetan Bir Sidhu
 Sanisha Rehan
 Shruti Padmanabhan
+
+Individual Contributions:
+========================
+Sanisha Rehan:
+==============
+1. Initial UI and application setup. (Choosing technologies like Flask, Materialize etc.)       
+2. Implementation of Google Maps and REST API for TRIPS using min-distance heuristic. (Front end and back end)
+3. Integration of Uber and Lyft Price APIs. (Borrowed basic implementation from another teammate)
+4. Parallelization of min-price API to speedup application response time.
+5. Cleanup of database modules and fixed various integration bugs
 ###############################################################################
